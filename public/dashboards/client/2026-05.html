@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dashboard Opérationnel — Mai 2026</title>
+<style>
+:root{
+  --brand-dark:#2B4455;--brand-accent:#C68779;--brand-muted:#707E88;--white:#FFFFFF;
+  --bg:#f3f6f8;--bg-soft:#f8fafc;--line:#e2e8f0;--line-soft:#edf2f7;
+  --text:#1e293b;--text-soft:#475569;
+  --success:#16a34a;--danger:#dc2626;--info:#3b82f6;--warning:#eab308;
+  --shadow-sm:0 1px 3px rgba(15,23,42,.08);--shadow-md:0 10px 30px rgba(43,68,85,.08);
+  --radius-md:10px;--radius-lg:14px;--radius-xl:18px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:system-ui,-apple-system,sans-serif;
+  background:radial-gradient(circle at top right,rgba(198,135,121,.10),transparent 22%),
+  radial-gradient(circle at bottom left,rgba(43,68,85,.08),transparent 24%),var(--bg);
+  color:var(--text);font-size:13px;line-height:1.45}
+header{background:linear-gradient(135deg,var(--brand-dark) 0%,#37576b 60%,var(--brand-accent) 100%);
+  color:var(--white);padding:24px 32px;box-shadow:0 12px 24px rgba(43,68,85,.16)}
+header h1{font-size:22px;font-weight:700;letter-spacing:-.01em}
+header .sub{font-size:12px;opacity:.82;margin-top:6px}
+nav{display:flex;background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);
+  padding:0 12px;overflow-x:auto;position:sticky;top:0;z-index:10;backdrop-filter:blur(8px)}
+nav button{padding:12px 16px;border:none;background:none;font-size:12px;font-weight:600;
+  color:var(--brand-muted);cursor:pointer;border-bottom:3px solid transparent;
+  white-space:nowrap;transition:.18s ease}
+nav button:hover{color:var(--brand-accent)}
+nav button.active{color:var(--brand-dark);border-bottom-color:var(--brand-accent)}
+.tab{display:none;padding:20px;max-width:1480px;margin:0 auto}
+.tab.active{display:block}
+.card{background:rgba(255,255,255,.94);border:1px solid rgba(226,232,240,.9);
+  border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:18px 20px;margin-bottom:18px}
+.card h2{font-size:15px;margin-bottom:10px;color:var(--brand-dark);
+  border-bottom:2px solid var(--line);padding-bottom:7px}
+.card h3{font-size:13px;margin:14px 0 8px;color:var(--text-soft)}
+table{width:100%;border-collapse:collapse;font-size:11.5px;margin-bottom:6px}
+thead th{background:var(--bg-soft);font-weight:600;text-align:right;padding:7px 8px;
+  border-bottom:2px solid var(--line);color:var(--text-soft);white-space:nowrap}
+thead th:first-child{text-align:left}
+td{padding:6px 8px;border-bottom:1px solid var(--line-soft);text-align:right;white-space:nowrap}
+td:first-child{text-align:left;font-weight:500}
+tbody tr:hover{background:#fafcff}
+tr.dim td{color:#b0b8c4!important;font-weight:400!important}
+tr.total td{background:#f1f5f9;font-weight:700;border-top:2px solid var(--line)}
+.up{color:var(--success)}.dn{color:var(--danger)}
+tr.dim .up,tr.dim .dn{color:#b0b8c4!important}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+@media (max-width:1100px){.grid3{grid-template-columns:1fr 1fr}}
+@media (max-width:800px){.grid2,.grid3{grid-template-columns:1fr}}
+.kpi-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.kpi{flex:1;min-width:130px;background:rgba(255,255,255,.96);
+  border:1px solid rgba(226,232,240,.9);border-radius:var(--radius-md);
+  padding:14px;box-shadow:var(--shadow-sm);text-align:center}
+.kpi .v{font-size:22px;font-weight:700;color:var(--brand-dark)}
+.kpi .l{font-size:10px;color:var(--brand-muted);margin-top:3px;
+  text-transform:uppercase;letter-spacing:.04em}
+.kpi .d{font-size:11px;margin-top:2px}
+.comment{background:#eff6ff;border-left:4px solid var(--info);border-radius:0 8px 8px 0;
+  padding:10px 14px;margin:10px 0;font-size:11.5px;line-height:1.55;color:#1e40af}
+.comment strong{color:var(--brand-dark)}
+.alert{background:#fef2f2;border-left:4px solid #ef4444;border-radius:0 8px 8px 0;
+  padding:10px 14px;margin:10px 0;font-size:11.5px;line-height:1.55;color:#991b1b}
+.success{background:#f0fdf4;border-left:4px solid #22c55e;border-radius:0 8px 8px 0;
+  padding:10px 14px;margin:10px 0;font-size:11.5px;line-height:1.55;color:#166534}
+.copil-block{background:#fefce8;border-left:4px solid var(--warning);
+  border-radius:0 8px 8px 0;padding:12px 16px;margin:10px 0;
+  font-size:12px;line-height:1.6;color:#854d0e}
+.copil-block ul{margin:6px 0 0 16px}
+.copil-block li{margin-bottom:4px}
+.note{font-size:10.5px;color:#94a3b8;font-style:italic;margin:4px 0 8px}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;
+  font-size:10px;font-weight:600;margin-left:6px}
+.badge-g{background:#dcfce7;color:#166534}
+.badge-r{background:#fee2e2;color:#991b1b}
+.badge-y{background:#fef9c3;color:#854d0e}
+.badge-b{background:#dbeafe;color:#1e40af}
+.flag-pt{background:linear-gradient(135deg,#fef3c7,#fde68a);padding:14px;border-radius:10px;margin-bottom:12px}
+.bar-wrap{background:#e2e8f0;border-radius:6px;height:14px;position:relative;overflow:hidden;width:100%;min-width:100px}
+.bar{height:100%;border-radius:6px;background:linear-gradient(90deg,#3b82f6,#60a5fa)}
+.bar-g{background:linear-gradient(90deg,#16a34a,#4ade80)}
+.bar-r{background:linear-gradient(90deg,#dc2626,#f87171)}
+.bar-y{background:linear-gradient(90deg,#eab308,#facc15)}
+.mini-kpi{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+.mini-kpi .m{flex:1;min-width:110px;background:#f8fafc;border:1px solid var(--line);
+  border-radius:8px;padding:8px 10px}
+.mini-kpi .mv{font-size:16px;font-weight:700;color:var(--brand-dark)}
+.mini-kpi .ml{font-size:10px;color:var(--brand-muted);text-transform:uppercase}
+.tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:600}
+.tag-new{background:#dcfce7;color:#166534}
+.tag-reg{background:#dbeafe;color:#1e40af}
+.tag-inact{background:#fee2e2;color:#991b1b}
+.tag-occ{background:#fef9c3;color:#854d0e}
+.section-anchor{scroll-margin-top:60px}
+.muted{color:#94a3b8;font-size:11px;font-style:italic}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📊 Dashboard Opérationnel — Mai 2026 <span style="font-size:13px;opacity:.7">vs Avril 2026</span></h1>
+  <div class="sub">Prospect · Client · Vigie · Recouvrement · Tickets · Campagnes PRM/CRM — Comparaison M/M & décisions COPIL 13/05</div>
+</header>
+
+<nav>
+  <button class="active" data-t="copil">🎯 Copil</button>
+  <button data-t="overview">Vue d'ensemble</button>
+  <button data-t="prospect">Prospect</button>
+  <button data-t="client">Client</button>
+  <button data-t="portugal">🇵🇹 Focus PT</button>
+  <button data-t="vigie">Vigie</button>
+  <button data-t="recouv">Recouvrement</button>
+  <button data-t="campagnes">📣 Campagnes</button>
+  <button data-t="tickets">Tickets</button>
+  <button data-t="discussion">Discussion</button>
+</nav>
+
+<!-- ========== COPIL ========== -->
+<section id="copil" class="tab active">
+  <div class="card">
+    <h2>🎯 Synthèse Copil — Mai 2026</h2>
+
+    <div class="copil-block">
+      <strong>1. Prospect — Stabilisation Newgora mais effondrement Slot TV & Psy Fr</strong>
+      <ul>
+        <li>📉 Volume <strong>901 (-5,9%)</strong>, 823 traités, QS 91%, efficacité <strong>17% (-2,6%)</strong>.</li>
+        <li>🇫🇷 FR : 421 appels (-10,0%), eff. 16,9% — File <strong>Newgora Astro Fr</strong> = 212 appels, eff. 13% (+5,6%) ✅ audit qui porte ses fruits.</li>
+        <li>🔴 Nouveaux points critiques : <strong>Slot TV</strong> eff. 5% (-77,6%) et <strong>Newgora Psy Fr</strong> -68,2% volumes / eff. 10% (-32,2%) → hypothèse nouvel affilié.</li>
+        <li>🇪🇸 24,7% & 🇵🇹 23,5% : dynamiques relatives toujours en repli vs objectif.</li>
+      </ul>
+    </div>
+
+    <div class="copil-block">
+      <strong>2. Client — Érosion globale, dépendance PT confirmée</strong>
+      <ul>
+        <li>📊 Global : <strong>8 079 (-7,6%)</strong>, QS 98%, eff. 60% (-1,7%).</li>
+        <li>🇵🇹 Portugal : 4 833 appels = <strong>59,8% du parc Client</strong>, eff. 62,1% (-2,7%) — New Buyer rebondit en volume <strong>76 (+16,9%)</strong> mais eff. chute à 39,7% (-23,0%) → joignabilité &lt; 40%.</li>
+        <li>🇪🇸 ES : -30,8% volume → cohérent avec l'assainissement annoncé (Maira sur flops 500-1000€).</li>
+        <li>🇹🇷 TR : Inactifs +240% → confirme le risque "80% experts en compte négatif en juin".</li>
+      </ul>
+    </div>
+
+    <div class="copil-block">
+      <strong>3. Vigie — Volumes en repli, efficacité en hausse</strong>
+      <ul>
+        <li>📈 Volume 2 473 (-12,7%), traités 992 (-13,4%), <strong>taux de traitement 40,1%</strong>.</li>
+        <li>QS 40%, eff. 11,1% (+28,4%) → amélioration relative.</li>
+        <li>Hors-Cibles N2 maintenu à 64% → décision COPIL : <strong>pas d'action immédiate</strong> (causes structurelles).</li>
+        <li>🇮🇹 Vigie IT s'effondre (-70,4% vol, 0 MER) → nouvelle alerte à investiguer.</li>
+      </ul>
+    </div>
+
+    <div class="copil-block">
+      <strong>4. Recouvrement — Vague d'impayés IT/ES, saturation capacité</strong>
+      <ul>
+        <li>💰 13 904 flux <strong>(+42,9%)</strong>, 4 052 traités (taux 29%, -9 pts), 30 952 € recouvrés (-8,4%).</li>
+        <li>🇮🇹 IT : +82,4% volume, QS 19,3% (-19,7%) — 🇪🇸 ES : +82,1% volume, QS 23,0%.</li>
+        <li>🇫🇷 FR : 3 464 flux (+15,9%), QS 60,4%, 8 846 € (-11,1%) — 44% tentatives OK seulement.</li>
+        <li>🚨 Inactifs : <strong>7 992 dossiers (+76,2%)</strong> vs 4 559 en avril.</li>
+        <li>✅ <strong>Décision COPIL 13/05</strong> : nouvelle org au 1er juin, 30h/sem dédiées FR, objectif 100% campagnes traitées.</li>
+      </ul>
+    </div>
+
+    <div class="copil-block">
+      <strong>5. Tickets — TMR en forte dégradation</strong>
+      <ul>
+        <li>🎫 140 créés / 150 traités, 141 résolus (94%), temps moyen <strong>99,7h</strong> ⚠ vs 60,9h en avril (+63,7%).</li>
+        <li>Top catégories : Insatisfaction (~120), Technique (~15), Demande Info (~5).</li>
+        <li>Top groupes : Client PT (~50), Client ITA (~40), Client FR (~35).</li>
+        <li>Marta Alves : <strong>vérifier biais lié au rôle superviseur</strong> Foxy.</li>
+      </ul>
+    </div>
+
+    <div class="card" style="margin-top:18px">
+      <h2>🔑 Actions Copil</h2>
+      <table>
+        <thead>
+          <tr><th>Priorité</th><th>Action</th><th>Périmètre</th><th>Responsable</th><th>Échéance</th><th>KPI</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="badge badge-r">URGENT</span></td><td>Activer la nouvelle organisation Recouvrement FR (30h/sem)</td><td>Recouvrement</td><td>Direction + Ops</td><td>1er juin</td><td>% campagnes traitées, € recouvrés</td></tr>
+          <tr><td><span class="badge badge-r">URGENT</span></td><td>Audit Slot TV (eff. 5%) & Newgora Psy Fr (-68,2%)</td><td>Prospect FR</td><td>Nermine + Partenaire</td><td>Juin S1</td><td>Eff. Slot TV / Psy Fr</td></tr>
+          <tr><td><span class="badge badge-r">URGENT</span></td><td>Vérifier biais TMR tickets (rôle superviseur Foxy)</td><td>Tickets</td><td>Marta Alves</td><td>Juin S1</td><td>TMR ajusté</td></tr>
+          <tr><td><span class="badge badge-y">IMPORTANT</span></td><td>Segmentation joignabilité New Buyer PT (faux n° vs valeur)</td><td>Client PT</td><td>Direction commerciale PT</td><td>Juin</td><td>Eff. New Buyer PT</td></tr>
+          <tr><td><span class="badge badge-y">IMPORTANT</span></td><td>Étendre la réorganisation Recouv à IT/ES si nécessaire</td><td>Recouvrement IT/ES</td><td>Direction + Ops</td><td>Juin</td><td>QS IT/ES</td></tr>
+          <tr><td><span class="badge badge-y">IMPORTANT</span></td><td>Démarrage campagne Flops ES (Maira, 15 profils 500-1000€)</td><td>Client ES</td><td>Maira</td><td>Lundi</td><td>Volumes assainis</td></tr>
+          <tr><td><span class="badge badge-y">IMPORTANT</span></td><td>Préparer assainissement Turquie (80% experts négatifs en juin)</td><td>Client TR</td><td>Direction commerciale TR</td><td>Juin</td><td># experts assainis</td></tr>
+          <tr><td><span class="badge badge-b">SUIVI</span></td><td>Dashboard Flash Prod (appels + tickets + back-office + rédac)</td><td>Pilotage</td><td>Best Call + Pilotage</td><td>Juin</td><td>Mise en ligne</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ========== VUE D'ENSEMBLE ========== -->
+<section id="overview" class="tab">
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">901</div><div class="l">Prospect</div><div class="d dn">-5,9%</div></div>
+    <div class="kpi"><div class="v">8 079</div><div class="l">Client</div><div class="d dn">-7,6%</div></div>
+    <div class="kpi"><div class="v">2 473</div><div class="l">Vigie</div><div class="d dn">-12,7%</div></div>
+    <div class="kpi"><div class="v">13 904</div><div class="l">Recouvrement</div><div class="d up">+42,9%</div></div>
+    <div class="kpi"><div class="v">30 952€</div><div class="l">€ Recouvrés</div><div class="d dn">-8,4%</div></div>
+    <div class="kpi"><div class="v">140</div><div class="l">Tickets créés</div><div class="d dn">vs 552 en avril</div></div>
+  </div>
+
+  <div class="card">
+    <h2>Cockpits globaux par flux</h2>
+    <table>
+      <thead><tr><th>Flux</th><th>#</th><th>%Δ</th><th>Traités</th><th>%Tx trait.</th><th>QS</th><th>MER/RDV</th><th>Eff.</th><th>%Δ Eff.</th></tr></thead>
+      <tbody>
+        <tr><td>📞 Prospect</td><td>901</td><td class="dn">-5,9%</td><td>823</td><td>91,3%</td><td>91%</td><td>143</td><td>17%</td><td class="dn">-2,6%</td></tr>
+        <tr><td>👤 Client</td><td>8 079</td><td class="dn">-7,6%</td><td>7 917</td><td>98,0%</td><td>98%</td><td>4 718</td><td>60%</td><td class="dn">-1,7%</td></tr>
+        <tr><td>🛡️ Vigie</td><td>2 473</td><td class="dn">-12,7%</td><td>992</td><td>40,1%</td><td>40%</td><td>92</td><td>11,1%</td><td class="up">+28,4%</td></tr>
+        <tr><td>💰 Recouvrement</td><td>13 904</td><td class="up">+42,9%</td><td>4 052</td><td>29,1%</td><td>29%</td><td>—</td><td>0%</td><td class="up">+28,1%</td></tr>
+      </tbody>
+    </table>
+    <div class="comment"><strong>Lecture Mai :</strong> Le Recouvrement explose en volume (+42,9%) mais le taux de traitement chute à 29% (-9 pts vs avril). Saturation claire → la nouvelle org du 1er juin est attendue.</div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2>Prospect — par pays</h2>
+      <table>
+        <thead><tr><th>Pays</th><th>#</th><th>Traités</th><th>QS</th><th>MER</th><th>Eff.</th><th>Obj.</th></tr></thead>
+        <tbody>
+          <tr><td>🇫🇷 France</td><td>421</td><td>385</td><td>91,4%</td><td>65</td><td>16,9%</td><td>24%</td></tr>
+          <tr><td>🇮🇹 Italie</td><td>258</td><td>237</td><td>91,9%</td><td>34</td><td>14,3%</td><td>19%</td></tr>
+          <tr><td>🇪🇸 Espagne</td><td>93</td><td>85</td><td>91,4%</td><td>21</td><td>24,7%</td><td>33%</td></tr>
+          <tr><td>🇵🇹 Portugal</td><td>88</td><td>81</td><td>92,0%</td><td>19</td><td>23,5%</td><td>35%</td></tr>
+          <tr class="dim"><td>🌎 Latino</td><td>25</td><td>20</td><td>80,0%</td><td>2</td><td>10,0%</td><td>33%</td></tr>
+          <tr class="dim"><td>🇹🇷 Turquie</td><td>13</td><td>12</td><td>92,3%</td><td>2</td><td>16,7%</td><td>20%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h2>Client — par pays (avec part du parc)</h2>
+      <table>
+        <thead><tr><th>Pays</th><th>#</th><th>% Parc</th><th>Eff.</th><th>Obj.</th></tr></thead>
+        <tbody>
+          <tr><td>🇵🇹 Portugal</td><td>4 833</td><td><strong>59,8%</strong></td><td>62,1%</td><td>63%</td></tr>
+          <tr><td>🇫🇷 France</td><td>1 308</td><td>16,2%</td><td>53,0%</td><td>57%</td></tr>
+          <tr><td>🇮🇹 Italie</td><td>698</td><td>8,6%</td><td>51,8%</td><td>50%</td></tr>
+          <tr><td>🇪🇸 Espagne</td><td>538</td><td>6,7%</td><td>54,8%</td><td>53%</td></tr>
+          <tr><td>🇹🇷 Turquie</td><td>375</td><td>4,6%</td><td>61,2%</td><td>60%</td></tr>
+          <tr><td>🌎 Latino</td><td>314</td><td>3,9%</td><td>71,9%</td><td>53%</td></tr>
+        </tbody>
+      </table>
+      <div class="comment"><strong>👁 Visibilité parc :</strong> Portugal monte à 59,8% (vs 59,3% en avril) — le repli de tous les autres pays accentue la dépendance PT.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== PROSPECT ========== -->
+<section id="prospect" class="tab">
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">901</div><div class="l">Appels</div><div class="d dn">-5,9%</div></div>
+    <div class="kpi"><div class="v">823</div><div class="l">Traités</div><div class="d dn">-6,5%</div></div>
+    <div class="kpi"><div class="v">91%</div><div class="l">QS</div><div class="d dn">-0,6%</div></div>
+    <div class="kpi"><div class="v">143</div><div class="l">MER/RDV</div><div class="d dn">-8,9%</div></div>
+    <div class="kpi"><div class="v">17%</div><div class="l">Efficacité</div><div class="d dn">-2,6%</div></div>
+  </div>
+
+  <div class="alert"><strong>⚠ Slot TV & Newgora Psy Fr en effondrement :</strong> deux nouvelles files critiques s'ajoutent au tableau de bord Prospect FR. Hypothèse COPIL : nouvel affilié influençant les résultats.</div>
+
+  <div class="card">
+    <h2>Prospect — Synthèse par pays</h2>
+    <table>
+      <thead><tr><th>Pays</th><th>#</th><th>%Δ</th><th>Traités</th><th>QS</th><th>MER</th><th>Eff.</th><th>%Δ Eff.</th><th>Obj.</th><th>Statut</th></tr></thead>
+      <tbody>
+        <tr><td>🇫🇷 France</td><td>421</td><td class="dn">-10,0%</td><td>385</td><td>91,4%</td><td>65</td><td>16,9%</td><td class="dn">-5,2%</td><td>24%</td><td class="dn">Sous obj.</td></tr>
+        <tr><td>🇮🇹 Italie</td><td>258</td><td class="dn">-6,2%</td><td>237</td><td>91,9%</td><td>34</td><td>14,3%</td><td class="up">+8,7%</td><td>19%</td><td class="dn">Sous obj.</td></tr>
+        <tr><td>🇪🇸 Espagne</td><td>93</td><td class="dn">-23,1%</td><td>85</td><td>91,4%</td><td>21</td><td>24,7%</td><td class="up">+0,7%</td><td>33%</td><td class="dn">Sous obj.</td></tr>
+        <tr><td>🇵🇹 Portugal</td><td>88</td><td class="up">+41,9%</td><td>81</td><td>92,0%</td><td>19</td><td>23,5%</td><td class="dn">-19,4%</td><td>35%</td><td class="dn">Sous obj.</td></tr>
+        <tr class="dim"><td>🌎 Latino</td><td>25</td><td>+25,0%</td><td>20</td><td>80,0%</td><td>2</td><td>10,0%</td><td>+60,0%</td><td>33%</td><td>NS</td></tr>
+        <tr class="dim"><td>🇹🇷 Turquie</td><td>13</td><td>+18,2%</td><td>12</td><td>92,3%</td><td>2</td><td>16,7%</td><td>+66,7%</td><td>20%</td><td>NS</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>🎯 Focus campagnes impactantes — France</h2>
+    <div class="note">Suite à l'audit Newgora Astro Fr décidé en avril, la file se stabilise. Mais 2 autres files entrent en zone critique.</div>
+    <table>
+      <thead><tr><th>File / Campagne</th><th>#</th><th>%Δ</th><th>Traités</th><th>QS</th><th>MER</th><th>Eff.</th><th>%Δ Eff.</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Prospects Newgora (Astro Fr)</strong> ✅</td><td>212</td><td class="up">+7,6%</td><td>197</td><td>93,0%</td><td>28</td><td>13%</td><td class="up">+5,6%</td></tr>
+        <tr><td>Prospect (autre Fr)</td><td>64</td><td class="dn">-11,1%</td><td>63</td><td>98,4%</td><td>20</td><td>31%</td><td class="dn">-2,5%</td></tr>
+        <tr><td>Prospect Astrocenter TV (Astro Fr)</td><td>54</td><td class="dn">-31,6%</td><td>51</td><td>94,4%</td><td>11</td><td>21%</td><td class="up">+11,8%</td></tr>
+        <tr><td>Prospect Media (Astro Fr)</td><td>30</td><td class="up">+25,0%</td><td>28</td><td>93,3%</td><td>5</td><td>19%</td><td class="dn">-39,6%</td></tr>
+        <tr><td><strong>Prospect Slot TV (Astro Fr)</strong> 🔴</td><td>24</td><td class="up">+41,2%</td><td>24</td><td>100%</td><td>1</td><td>5%</td><td class="dn">-77,6%</td></tr>
+        <tr><td><strong>Prospect Newgora (Psy Fr)</strong> 🔴</td><td>21</td><td class="dn">-68,2%</td><td>19</td><td>90,5%</td><td>2</td><td>10%</td><td class="dn">-32,2%</td></tr>
+        <tr><td>Prospect Partenaires (Astro Fr)</td><td>15</td><td class="up">+36,4%</td><td>11</td><td>73,3%</td><td>3</td><td>20%</td><td>—</td></tr>
+      </tbody>
+    </table>
+    <div class="alert"><strong>🚨 2 files critiques en mai :</strong> Slot TV (eff. 5%, -77,6%) et Newgora Psy Fr (volume -68,2%, eff. 10%). À investiguer : nouvel affilié ? Modification ciblage ?</div>
+    <div class="success"><strong>✅ Newgora Astro Fr stabilisée :</strong> +5,6% d'eff. après l'audit. À capitaliser.</div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2>Italie — Campagnes</h2>
+      <table>
+        <thead><tr><th>File / Campagne</th><th>#</th><th>%Δ</th><th>Eff.</th><th>%Δ Eff.</th></tr></thead>
+        <tbody>
+          <tr><td>Prospect Partenaires (Astro It)</td><td>145</td><td class="up">+16,0%</td><td>7%</td><td class="up">+25,4%</td></tr>
+          <tr><td>Prospect Newgora (Astro It)</td><td>43</td><td class="dn">-14,0%</td><td>31%</td><td class="up">+3,4%</td></tr>
+          <tr><td>Prospect Media (Astro It)</td><td>39</td><td class="dn">-36,1%</td><td>17%</td><td class="dn">-5,0%</td></tr>
+          <tr><td>Prospect Organique (Astro It)</td><td>31</td><td class="dn">-20,5%</td><td>26%</td><td class="up">+138,7%</td></tr>
+        </tbody>
+      </table>
+      <div class="success">Organique It : eff. multipliée par 2,4 → à creuser pour réplication.</div>
+    </div>
+
+    <div class="card">
+      <h2>Lecture managériale</h2>
+      <div class="alert"><strong>Priorité 1 :</strong> investiguer Slot TV (eff. 5%) et Newgora Psy Fr (-68,2%) → hypothèse nouvel affilié.</div>
+      <div class="comment"><strong>Priorité 2 :</strong> capitaliser sur la stabilisation Newgora Astro Fr (audit avril concluant).</div>
+      <div class="success"><strong>Bon signal :</strong> Italie reprend +8,7% d'efficacité, et Organique It explose à +138,7%.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CLIENT ========== -->
+<section id="client" class="tab">
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">8 079</div><div class="l">Appels</div><div class="d dn">-7,6%</div></div>
+    <div class="kpi"><div class="v">7 917</div><div class="l">Traités</div><div class="d dn">-7,6%</div></div>
+    <div class="kpi"><div class="v">98%</div><div class="l">QS</div><div class="d">stable</div></div>
+    <div class="kpi"><div class="v">4 718</div><div class="l">MER/RDV</div><div class="d dn">-9,1%</div></div>
+    <div class="kpi"><div class="v">60%</div><div class="l">Efficacité</div><div class="d dn">-1,7%</div></div>
+  </div>
+
+  <div class="comment"><strong>Lecture :</strong> repli global (-7,6%) avec ES en chute libre (-30,8%, cohérent avec assainissement Maira). PT recule moins mais sa part de parc continue de croître (59,8%).</div>
+
+  <div class="card">
+    <h2>Client — Synthèse par pays + Part de parc</h2>
+    <table>
+      <thead><tr><th>Pays</th><th>#</th><th>% Parc</th><th>Traités</th><th>QS</th><th>MER</th><th>Eff.</th><th>Obj.</th><th>Statut</th></tr></thead>
+      <tbody>
+        <tr><td>🇵🇹 Portugal</td><td>4 833</td><td>59,8%</td><td>4 764</td><td>98,6%</td><td>2 958</td><td>62,1%</td><td>63%</td><td class="dn">-0,9 pt</td></tr>
+        <tr><td>🇫🇷 France</td><td>1 308</td><td>16,2%</td><td>1 267</td><td>96,9%</td><td>672</td><td>53,0%</td><td>57%</td><td class="dn">Sous obj.</td></tr>
+        <tr><td>🇮🇹 Italie</td><td>698</td><td>8,6%</td><td>691</td><td>99,0%</td><td>358</td><td>51,8%</td><td>50%</td><td class="up">Atteint</td></tr>
+        <tr><td>🇪🇸 Espagne</td><td>538</td><td>6,7%</td><td>520</td><td>96,7%</td><td>285</td><td>54,8%</td><td>53%</td><td class="up">Atteint</td></tr>
+        <tr><td>🇹🇷 Turquie</td><td>375</td><td>4,6%</td><td>361</td><td>96,3%</td><td>221</td><td>61,2%</td><td>60%</td><td class="up">Atteint</td></tr>
+        <tr><td>🌎 Latino</td><td>314</td><td>3,9%</td><td>302</td><td>96,2%</td><td>217</td><td>71,9%</td><td>53%</td><td class="up">Atteint</td></tr>
+        <tr class="total"><td>TOTAL</td><td>8 079</td><td>100%</td><td>7 917</td><td>98,0%</td><td>4 718</td><td>60%</td><td>—</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>👥 Typologie Client par pays — Nouveaux / Réguliers / Occasionnels / Inactifs</h2>
+
+    <h3>🇫🇷 France — 1 308 appels</h3>
+    <table>
+      <thead><tr><th>Typologie</th><th>#</th><th>%Δ</th><th>%Parc FR</th><th>Eff.</th><th>MER</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag tag-reg">Régulier</span></td><td>1 089</td><td class="up">+12,6%</td><td>83%</td><td>55,8%</td><td>608</td></tr>
+        <tr><td><span class="tag tag-inact">Inactif</span></td><td>92</td><td class="dn">-17,9%</td><td>7%</td><td>34,8%</td><td>32</td></tr>
+        <tr><td><span class="tag tag-occ">Occasionnel</span></td><td>84</td><td class="dn">-5,6%</td><td>6%</td><td>51,2%</td><td>43</td></tr>
+        <tr><td><span class="tag tag-new">New Buyer</span></td><td>43</td><td class="up">+10,3%</td><td>3%</td><td>43,1%</td><td>19</td></tr>
+      </tbody>
+    </table>
+    <div class="success"><strong>FR :</strong> bonne dynamique Régulier (+12,6%) et New Buyer (+10,3%). Inactifs en repli après le pic d'avril.</div>
+
+    <h3>🇮🇹 Italie — 698 appels</h3>
+    <table>
+      <thead><tr><th>Typologie</th><th>#</th><th>%Δ</th><th>%Parc IT</th><th>Eff.</th><th>MER</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag tag-reg">Régulier</span></td><td>557</td><td class="dn">-11,9%</td><td>80%</td><td>52,8%</td><td>294</td></tr>
+        <tr><td><span class="tag tag-occ">Occasionnel</span></td><td>52</td><td>+8,3%</td><td>7%</td><td>55,8%</td><td>29</td></tr>
+        <tr><td><span class="tag tag-inact">Inactif</span></td><td>49</td><td class="dn">-5,8%</td><td>7%</td><td>41,3%</td><td>20</td></tr>
+        <tr><td><span class="tag tag-new">New Buyer</span></td><td>40</td><td class="up">+29,0%</td><td>6%</td><td>63,6%</td><td>25</td></tr>
+      </tbody>
+    </table>
+    <div class="success"><strong>IT :</strong> New Buyer +29% avec eff. 63,6% — meilleure performance d'acquisition du périmètre.</div>
+
+    <h3>🇪🇸 Espagne — 538 appels</h3>
+    <table>
+      <thead><tr><th>Typologie</th><th>#</th><th>%Δ</th><th>%Parc ES</th><th>Eff.</th><th>MER</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag tag-reg">Régulier</span></td><td>455</td><td class="dn">-27,7%</td><td>85%</td><td>56,9%</td><td>249</td></tr>
+        <tr><td><span class="tag tag-inact">Inactif</span></td><td>38</td><td class="dn">-19,1%</td><td>7%</td><td>37,8%</td><td>14</td></tr>
+        <tr><td><span class="tag tag-occ">Occasionnel</span></td><td>23</td><td class="dn">-47,7%</td><td>4%</td><td>65,0%</td><td>13</td></tr>
+        <tr><td><span class="tag tag-new">New Buyer</span></td><td>22</td><td class="dn">-33,3%</td><td>4%</td><td>31,8%</td><td>7</td></tr>
+      </tbody>
+    </table>
+    <div class="comment"><strong>ES :</strong> repli généralisé cohérent avec l'assainissement annoncé (Maira sur flops 500-1000€).</div>
+
+    <h3>🇵🇹 Portugal — 4 833 appels <span class="badge badge-r">⚠ Engagement New Buyer fragile</span></h3>
+    <table>
+      <thead><tr><th>Typologie</th><th>#</th><th>%Δ</th><th>%Parc PT</th><th>Eff.</th><th>%Δ Eff.</th><th>MER</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag tag-reg">Régulier</span></td><td>4 497</td><td class="dn">-4,0%</td><td>93%</td><td>63,2%</td><td class="dn">-2,2%</td><td>2 842</td></tr>
+        <tr><td><span class="tag tag-occ">Occasionnel</span></td><td>167</td><td class="up">+7,1%</td><td>3%</td><td>53,7%</td><td class="up">+4,1%</td><td>90</td></tr>
+        <tr><td><span class="tag tag-inact">Inactif</span></td><td>93</td><td class="dn">-17,7%</td><td>2%</td><td>40,9%</td><td class="dn">-19,0%</td><td>38</td></tr>
+        <tr><td><span class="tag tag-new">New Buyer</span> 🔴</td><td>76</td><td class="up">+26,7%</td><td>2%</td><td>39,7%</td><td class="dn">-25,7%</td><td>30</td></tr>
+      </tbody>
+    </table>
+    <div class="alert"><strong>🚨 New Buyer PT — signal ambigu :</strong> rebond volume (60 → 76, +26,7%) mais efficacité s'effondre à 39,7% (-25,7%). Joignabilité &lt; 40% → soit faux numéros, soit proposition de valeur inadaptée. Segmentation demandée par F. Nardin.</div>
+
+    <h3>🇹🇷 Turquie — 375 appels</h3>
+    <table>
+      <thead><tr><th>Typologie</th><th>#</th><th>%Δ</th><th>%Parc TR</th><th>Eff.</th><th>MER</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag tag-reg">Régulier</span></td><td>349</td><td class="up">+2,3%</td><td>93%</td><td>63,2%</td><td>220</td></tr>
+        <tr><td><span class="tag tag-inact">Inactif</span></td><td>17</td><td class="up">+240,0%</td><td>5%</td><td>8,3%</td><td>1</td></tr>
+        <tr><td><span class="tag tag-occ">Occasionnel</span></td><td>9</td><td class="dn">-35,7%</td><td>2%</td><td>57,1%</td><td>4</td></tr>
+      </tbody>
+    </table>
+    <div class="alert"><strong>🇹🇷 TR :</strong> Inactifs +240% — confirme le risque "80% experts en compte négatif en juin" évoqué en COPIL. Préparer l'assainissement.</div>
+  </div>
+</section>
+
+<!-- ========== FOCUS PORTUGAL ========== -->
+<section id="portugal" class="tab">
+  <div class="flag-pt">
+    <h2 style="color:#854d0e;margin:0">🇵🇹 Focus Portugal — Analyse approfondie</h2>
+    <div class="note" style="color:#854d0e">Portugal = 59,8% du parc Client (vs 59,3% en avril). Dépendance qui s'accentue.</div>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">4 833</div><div class="l">Appels Client PT</div><div class="d dn">-3,6%</div></div>
+    <div class="kpi"><div class="v">59,8%</div><div class="l">Part du parc Client</div><div class="d up">+0,5 pt</div></div>
+    <div class="kpi"><div class="v">62,1%</div><div class="l">Efficacité</div><div class="d dn">-2,7%</div></div>
+    <div class="kpi"><div class="v">76</div><div class="l">New Buyer</div><div class="d up">+26,7% vol.</div></div>
+    <div class="kpi"><div class="v">39,7%</div><div class="l">Eff. New Buyer</div><div class="d dn">-25,7%</div></div>
+  </div>
+
+  <div class="alert">
+    <strong>🚨 Confirmation du signal Direction :</strong> volume New Buyer rebondit (60 → 76) mais l'efficacité s'effondre à 39,7%. <strong>Joignabilité &lt; 40%</strong> → la baisse n'est plus quantitative mais qualitative. Hypothèse F. Nardin : faux numéros ou proposition de valeur inadaptée.
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2>Visibilité volumes entrants Client PT</h2>
+      <table>
+        <thead><tr><th>Indicateur</th><th>Valeur</th><th>%Δ</th></tr></thead>
+        <tbody>
+          <tr><td>Volume entrant</td><td>4 833</td><td class="dn">-3,6%</td></tr>
+          <tr><td>Traités</td><td>4 764</td><td class="dn">-3,9%</td></tr>
+          <tr><td>Taux de traitement</td><td>98,6%</td><td class="dn">-0,3%</td></tr>
+          <tr><td>Non traités (estim.)</td><td>69</td><td>—</td></tr>
+          <tr><td>MER/RDV</td><td>2 958</td><td class="dn">-6,3%</td></tr>
+          <tr><td>Appels sans MER</td><td>1 806</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>Issue des appels PT (sans MER)</h2>
+      <div class="comment"><strong>1 806 appels traités sans MER/RDV</strong> au Portugal. Comprendre l'issue est clé :</div>
+      <ul style="margin-left:18px;font-size:11.5px">
+        <li>Demandes d'information simples</li>
+        <li>Réclamations / insatisfactions (cf. tickets PT ~50)</li>
+        <li>Refus consultation / hors créneau</li>
+        <li>Gestion compte client</li>
+      </ul>
+      <div class="alert"><strong>Demande COPIL 13/05 :</strong> segmentation joignabilité par typologie (faux numéros vs valeur). À livrer pour juin.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Dynamique New Buyer PT — vue longitudinale</h2>
+    <table>
+      <thead><tr><th>Mois</th><th>New Buyer PT</th><th>%Δ vol.</th><th>Eff.</th><th>%Δ Eff.</th><th>Lecture</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Mai 2026</strong></td><td><strong>76</strong></td><td class="up">+26,7%</td><td>39,7%</td><td class="dn">-25,7%</td><td class="dn">Volume rebondit mais joignabilité s'effondre</td></tr>
+        <tr><td>Avril 2026</td><td>60</td><td class="dn">-44,4%</td><td>53,4%</td><td class="up">+51,7%</td><td>Volume en chute mais eff. en hausse</td></tr>
+        <tr><td>Mars 2026 (estim.)</td><td>~108</td><td>—</td><td>~35%</td><td>—</td><td>Référence</td></tr>
+        <tr><td colspan="6" style="text-align:center;color:#94a3b8;font-style:italic">⚠ La problématique change de nature : ce n'est plus le volume mais la qualité de contact qui pose problème en mai</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Visibilité volumes Vigie PT (croisement)</h2>
+    <table>
+      <thead><tr><th>Indicateur</th><th>Mai</th><th>%Δ vs avril</th></tr></thead>
+      <tbody>
+        <tr><td>Volume Vigie PT</td><td>621</td><td class="dn">-1,4%</td></tr>
+        <tr><td>Traités</td><td>153</td><td class="dn">-11,0%</td></tr>
+        <tr><td>QS</td><td>24,6%</td><td class="dn">-2,7 pts</td></tr>
+        <tr><td>MER</td><td>41</td><td>+5,1%</td></tr>
+        <tr><td>Efficacité</td><td>26,8%</td><td class="up">+18,1%</td></tr>
+      </tbody>
+    </table>
+    <div class="comment">⚠ Limite reconnue COPIL : indicateurs basés sur nb d'appels lancés, pas sur personnes réellement jointes. À faire évoluer.</div>
+  </div>
+</section>
+
+<!-- ========== VIGIE ========== -->
+<section id="vigie" class="tab">
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">2 473</div><div class="l">Flux Vigie</div><div class="d dn">-12,7%</div></div>
+    <div class="kpi"><div class="v">992</div><div class="l">Traités</div><div class="d dn">-13,4%</div></div>
+    <div class="kpi"><div class="v">40,1%</div><div class="l">Tx traitement</div><div class="d">⚠ 59,9% non traités</div></div>
+    <div class="kpi"><div class="v">40%</div><div class="l">QS</div><div class="d dn">-0,9%</div></div>
+    <div class="kpi"><div class="v">92</div><div class="l">MER/RDV</div><div class="d dn">-6,1%</div></div>
+    <div class="kpi"><div class="v">11,1%</div><div class="l">Efficacité</div><div class="d up">+28,4%</div></div>
+  </div>
+
+  <div class="card">
+    <h2>Vigie par pays — Visibilité demandée</h2>
+    <table>
+      <thead><tr><th>Pays</th><th>#</th><th>%Δ</th><th>Traités</th><th>%Δ</th><th>Tx trait.</th><th>QS</th><th>MER</th><th>Eff.</th><th>%Δ Eff.</th></tr></thead>
+      <tbody>
+        <tr><td>🇫🇷 France</td><td>707</td><td class="dn">-20,9%</td><td>463</td><td class="dn">-20,0%</td><td>65,5%</td><td>65,5%</td><td>32</td><td>6,9%</td><td class="up">+38,7%</td></tr>
+        <tr><td>🇵🇹 Portugal</td><td>621</td><td class="dn">-1,4%</td><td>153</td><td class="dn">-11,0%</td><td>24,6%</td><td>24,6%</td><td>41</td><td>26,8%</td><td class="up">+18,1%</td></tr>
+        <tr><td>🇪🇸 Espagne</td><td>499</td><td class="dn">-0,4%</td><td>208</td><td class="up">+21,6%</td><td>41,7%</td><td>41,7%</td><td>19</td><td>9,1%</td><td class="up">+75,6%</td></tr>
+        <tr><td>🇹🇷 Turquie</td><td>346</td><td class="up">+69,6%</td><td>47</td><td class="up">+370%</td><td>13,6%</td><td>13,6%</td><td>9</td><td>19,1%</td><td class="up">+110,6%</td></tr>
+        <tr><td>🌎 Latino</td><td>170</td><td class="up">+54,5%</td><td>78</td><td class="up">+110,8%</td><td>45,9%</td><td>45,9%</td><td>9</td><td>11,5%</td><td class="dn">-28,8%</td></tr>
+        <tr><td>🇮🇹 Italie</td><td>121</td><td class="dn">-69,4%</td><td>36</td><td class="dn">-73,9%</td><td>29,8%</td><td>29,8%</td><td>0</td><td>0%</td><td class="dn">-100%</td></tr>
+      </tbody>
+    </table>
+    <div class="alert"><strong>⚠ Nouvelle alerte Vigie IT :</strong> -69,4% volume, 0 MER (vs 13 en avril). Cause à investiguer (problème routage ? base ?).</div>
+    <div class="comment"><strong>🇹🇷 Vigie TR +69,6% volume / +110,6% eff.</strong> → cohérent avec l'assainissement parc en cours.</div>
+  </div>
+
+  <div class="card">
+    <h2>Typologie clients en Vigie</h2>
+    <table>
+      <thead><tr><th>Typologie</th><th>#</th><th>%Δ</th><th>Traités</th><th>%Traités</th><th>MER</th><th>Eff.</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag tag-reg">Régulier</span></td><td>2 044</td><td class="dn">-11,6%</td><td>821</td><td>83%</td><td>89</td><td>10,8%</td></tr>
+        <tr><td>Prospect</td><td>214</td><td class="dn">-2,3%</td><td>87</td><td>9%</td><td>11</td><td>12,6%</td></tr>
+        <tr><td><span class="tag tag-occ">Occasionnel</span></td><td>90</td><td class="dn">-11,8%</td><td>32</td><td>3%</td><td>3</td><td>9,4%</td></tr>
+        <tr><td><span class="tag tag-inact">Inactif</span></td><td>67</td><td class="dn">-4,3%</td><td>26</td><td>3%</td><td>4</td><td>15,4%</td></tr>
+        <tr><td><span class="tag tag-new">New Buyer</span></td><td>58</td><td class="up">+61,1%</td><td>26</td><td>3%</td><td>3</td><td>11,5%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2>📞 Issue des appels Vigie — N2 (qualifications)</h2>
+      <table>
+        <thead><tr><th>Qualification</th><th>#</th><th>%</th><th>%Δ</th></tr></thead>
+        <tbody>
+          <tr><td>Hors-Cibles</td><td>637</td><td>64%</td><td class="up">+3,2%</td></tr>
+          <tr><td>Client</td><td>326</td><td>33%</td><td class="dn">-9,5%</td></tr>
+          <tr><td>Prospect</td><td>13</td><td>1%</td><td class="up">+7,3%</td></tr>
+        </tbody>
+      </table>
+      <div class="comment"><strong>Décision COPIL 13/05 :</strong> pas d'action immédiate sur les 64% Hors-Cibles (causes structurelles reconnues).</div>
+    </div>
+
+    <div class="card">
+      <h2>👂 Joignabilité Vigie — N3</h2>
+      <table>
+        <thead><tr><th>Statut</th><th>#</th><th>%</th><th>%Δ</th></tr></thead>
+        <tbody>
+          <tr><td>Répondeur</td><td>379</td><td>38%</td><td class="dn">-13,1%</td></tr>
+          <tr><td>Pas de réponse</td><td>241</td><td>24%</td><td class="up">+8,6%</td></tr>
+          <tr><td>MER/RDV ko</td><td>231</td><td>23%</td><td class="dn">-27,4%</td></tr>
+          <tr><td>MER/RDV ok</td><td>108</td><td>11%</td><td class="up">+4,9%</td></tr>
+          <tr><td>Anomalie technique</td><td>14</td><td>1%</td><td class="dn">-36,4%</td></tr>
+          <tr><td>Faux numéro</td><td>3</td><td>0%</td><td class="dn">-50,0%</td></tr>
+        </tbody>
+      </table>
+      <div class="comment"><strong>62% d'injoignables</strong> (Répondeur + Pas de réponse) — stable vs avril.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>⏱ DMT Vigie (durée moyenne de traitement)</h2>
+    <table>
+      <thead><tr><th>Tranche</th><th>#</th><th>%</th><th>%Δ</th></tr></thead>
+      <tbody>
+        <tr><td>A / Moins de 30s</td><td>566</td><td>57,1%</td><td class="up">+18,9%</td></tr>
+        <tr><td>B / Moins de 2 min</td><td>355</td><td>35,8%</td><td class="dn">-35,8%</td></tr>
+        <tr><td>C / Moins de 5 min</td><td>63</td><td>6,4%</td><td class="dn">-6,0%</td></tr>
+        <tr><td>D / Moins de 10 min</td><td>8</td><td>0,8%</td><td class="dn">-33,3%</td></tr>
+        <tr><td>E / Plus de 10 min</td><td>0</td><td>0%</td><td class="dn">-100%</td></tr>
+      </tbody>
+    </table>
+    <div class="comment">93% des appels Vigie traités en moins de 2 min → traitement très court, cohérent avec un fort taux Hors-Cibles.</div>
+  </div>
+</section>
+
+<!-- ========== RECOUVREMENT ========== -->
+<section id="recouv" class="tab">
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">13 904</div><div class="l">Flux sortants</div><div class="d up">+42,9%</div></div>
+    <div class="kpi"><div class="v">4 052</div><div class="l">Traités</div><div class="d up">+30,8%</div></div>
+    <div class="kpi"><div class="v">29%</div><div class="l">QS / Tx trait.</div><div class="d dn">-9 pts</div></div>
+    <div class="kpi"><div class="v">30 952€</div><div class="l">€ Recouvrés</div><div class="d dn">-8,4%</div></div>
+    <div class="kpi"><div class="v">62%</div><div class="l">%OK Clics</div><div class="d up">+3 pts</div></div>
+    <div class="kpi"><div class="v">1 396</div><div class="l">Clics</div><div class="d dn">-8,4%</div></div>
+  </div>
+
+  <div class="copil-block">
+    <strong>Décision COPIL 13/05 :</strong> Nouvelle organisation au 1er juin avec 30h/sem dédiées FR (remplacement Laura + Nicole), objectif <strong>100% des campagnes traitées</strong>. Ajout d'une colonne « contribution Bestcall aux objectifs marché » dans le reporting (proposition F. Nardin).
+  </div>
+
+  <div class="card">
+    <h2>🌍 Recouvrement par pays — Vue détaillée</h2>
+    <table>
+      <thead><tr><th>Pays</th><th>#</th><th>%Δ</th><th>Traités</th><th>%Δ</th><th>Tx trait.</th><th>€ Recouvrés</th><th>%Δ €</th></tr></thead>
+      <tbody>
+        <tr><td>🇮🇹 Italie</td><td>4 756</td><td class="up">+85,1%</td><td>920</td><td class="up">+49,6%</td><td>19,3%</td><td>8 849 €</td><td class="dn">-7,0%</td></tr>
+        <tr><td>🇪🇸 Espagne</td><td>3 525</td><td class="up">+83,0%</td><td>809</td><td class="up">+56,2%</td><td>23,0%</td><td>3 279 €</td><td class="up">+1,7%</td></tr>
+        <tr><td>🇫🇷 France</td><td>3 464</td><td class="up">+15,9%</td><td>2 093</td><td class="up">+20,0%</td><td>60,4%</td><td>8 846 €</td><td class="dn">-11,1%</td></tr>
+        <tr><td>🇹🇷 Turquie</td><td>1 003</td><td class="dn">-10,7%</td><td>72</td><td class="up">+33,3%</td><td>7,2%</td><td>1 410 €</td><td class="up">+56,9%</td></tr>
+        <tr><td>🇵🇹 Portugal</td><td>996</td><td class="up">+18,6%</td><td>100</td><td class="dn">-13,0%</td><td>10,0%</td><td>7 154 €</td><td class="dn">-14,6%</td></tr>
+        <tr><td>🌎 Latino</td><td>160</td><td class="dn">-27,6%</td><td>58</td><td class="up">+13,7%</td><td>36,3%</td><td>1 414 €</td><td class="dn">-21,7%</td></tr>
+        <tr class="total"><td>TOTAL</td><td>13 904</td><td class="up">+42,9%</td><td>4 052</td><td class="up">+30,8%</td><td>29,1%</td><td>30 952 €</td><td class="dn">-8,4%</td></tr>
+      </tbody>
+    </table>
+    <div class="alert"><strong>🚨 Vague IT/ES :</strong> +82-85% de volumes absorbés mais traitement à 19-23% seulement. La capacité actuelle ne suit pas.</div>
+    <div class="comment"><strong>Taux de traitement très inégal :</strong> France 60,4% reste le mieux servi. Turquie 7,2% et Portugal 10% restent très bas.</div>
+  </div>
+
+  <div class="card">
+    <h2>💳 Efficacité des clics par pays</h2>
+    <table>
+      <thead><tr><th>Pays</th><th># Clics</th><th>%Δ</th><th>Tentatives OK</th><th>%OK</th><th>€ Recouvrés</th></tr></thead>
+      <tbody>
+        <tr><td>🇫🇷 France</td><td>559</td><td class="dn">-5,6%</td><td>245</td><td>44%</td><td>8 846 €</td></tr>
+        <tr><td>🇵🇹 Portugal</td><td>302</td><td class="dn">-32,7%</td><td>224</td><td>74%</td><td>7 154 €</td></tr>
+        <tr><td>🇮🇹 Italie</td><td>256</td><td class="up">+5,3%</td><td>198</td><td>77%</td><td>8 849 €</td></tr>
+        <tr><td>🇪🇸 Espagne</td><td>137</td><td class="up">+21,2%</td><td>98</td><td>72%</td><td>3 279 €</td></tr>
+        <tr><td>🇹🇷 Turquie</td><td>97</td><td class="up">+79,6%</td><td>61</td><td>63%</td><td>1 410 €</td></tr>
+        <tr><td>🌎 Latino</td><td>45</td><td class="dn">-38,4%</td><td>36</td><td>80%</td><td>1 414 €</td></tr>
+      </tbody>
+    </table>
+    <div class="success"><strong>✅ Latino meilleur %OK clics (80%)</strong> et 🇵🇹 PT à 74%. <strong>🇫🇷 FR à 44%</strong> = principale cible de la nouvelle org du 1er juin.</div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2>👥 Typologie clients en Recouvrement</h2>
+      <table>
+        <thead><tr><th>Typologie</th><th>#</th><th>%Δ</th><th>Traités</th><th>%Traités</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tag tag-inact">Inactif</span></td><td>7 992</td><td class="up">+76,2%</td><td>1 901</td><td>47%</td></tr>
+          <tr><td><span class="tag tag-reg">Régulier</span></td><td>3 426</td><td class="up">+20,5%</td><td>1 086</td><td>27%</td></tr>
+          <tr><td><span class="tag tag-occ">Occasionnel</span></td><td>1 482</td><td class="up">+12,0%</td><td>674</td><td>17%</td></tr>
+          <tr><td><span class="tag tag-new">New Buyer</span></td><td>1 004</td><td class="up">+3,6%</td><td>391</td><td>10%</td></tr>
+        </tbody>
+      </table>
+      <div class="alert"><strong>🚨 Inactifs explosent : 7 992 dossiers (+76,2%)</strong> vs 4 559 en avril. Goulot principal du flux Recouv.</div>
+    </div>
+
+    <div class="card">
+      <h2>📞 Issue des appels N1 (Recouvrement)</h2>
+      <table>
+        <thead><tr><th>Disposition N1</th><th>#</th><th>%</th></tr></thead>
+        <tbody>
+          <tr><td>Appel non abouti</td><td>3 311</td><td>82%</td></tr>
+          <tr><td>Souhaite régler ses impayés</td><td>266</td><td>7%</td></tr>
+          <tr><td>Hors-Cibles</td><td>242</td><td>6%</td></tr>
+          <tr><td>Refus de Paiement</td><td>160</td><td>4%</td></tr>
+          <tr><td>N'est plus en impayé</td><td>42</td><td>1%</td></tr>
+        </tbody>
+      </table>
+      <div class="alert"><strong>82% appels non aboutis</strong> (vs 81% en avril) → joignabilité reste le frein n°1.</div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2>📋 Détails N2 (appels répondus)</h2>
+      <table>
+        <thead><tr><th>Disposition N2</th><th>#</th><th>%</th></tr></thead>
+        <tbody>
+          <tr><td>Répondeur</td><td>2 028</td><td>50%</td></tr>
+          <tr><td>Pas de réponse</td><td>1 283</td><td>32%</td></tr>
+          <tr><td>Faux numéro</td><td>213</td><td>5%</td></tr>
+          <tr><td>Souhaite régler ultérieurement</td><td>156</td><td>4%</td></tr>
+          <tr><td>Je n'ai jamais utilisé nos services</td><td>146</td><td>4%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>💵 Mode de paiement (N3)</h2>
+      <table>
+        <thead><tr><th>Mode</th><th>#</th><th>%Δ</th></tr></thead>
+        <tbody>
+          <tr><td>Paiement par CB</td><td>60</td><td class="dn">-11,8%</td></tr>
+          <tr><td>Sur le wallet</td><td>7</td><td class="up">+40,0%</td></tr>
+          <tr><td>Par chèque</td><td>1</td><td>0%</td></tr>
+        </tbody>
+      </table>
+      <div class="comment">CB reste largement dominant.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>💰 Recouvrement détaillé — Impayés & objectifs</h2>
+    <div class="mini-kpi">
+      <div class="m"><div class="ml">Impayés 3 derniers mois recouvrés</div><div class="mv">66 046 €</div></div>
+      <div class="m"><div class="ml">Impayés mois en cours</div><div class="mv">181 609 €</div></div>
+      <div class="m"><div class="ml">Taux de couverture mois</div><div class="mv">64,0%</div></div>
+      <div class="m"><div class="ml">Impayés &gt; 3 mois</div><div class="mv">7 116 €</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>⏱ DMT Recouvrement</h2>
+    <table>
+      <thead><tr><th>Tranche</th><th>#</th><th>%</th><th>%Δ</th></tr></thead>
+      <tbody>
+        <tr><td>A / Moins de 30s</td><td>2 231</td><td>55,1%</td><td class="up">+43,6%</td></tr>
+        <tr><td>B / Moins de 2 min</td><td>1 695</td><td>41,8%</td><td class="up">+20,9%</td></tr>
+        <tr><td>C / Moins de 5 min</td><td>91</td><td>2,3%</td><td class="dn">-10,8%</td></tr>
+        <tr><td>D / Moins de 10 min</td><td>28</td><td>0,7%</td><td class="dn">-9,7%</td></tr>
+        <tr><td>E / Plus de 10 min</td><td>7</td><td>0,2%</td><td class="dn">-12,5%</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ========== CAMPAGNES ========== -->
+<section id="campagnes" class="tab">
+  <div class="card">
+    <h2>📣 Campagnes d'appels sortants PRM/CRM — Vue d'ensemble</h2>
+    <div class="comment"><strong>Décision COPIL 13/05 :</strong> création d'un <strong>Dashboard Flash Prod</strong> centralisant appels + tickets + back-office + rédactionnel + fidélisation. Intégration tags marketing (Star / Medium / Low + Spark Rice / Glow).</div>
+  </div>
+
+  <div class="card">
+    <h2>🇫🇷 Campagnes Prospect France</h2>
+    <table>
+      <thead><tr><th>File / Campagne</th><th>Source</th><th>#</th><th>%Δ</th><th>Traités</th><th>QS</th><th>MER</th><th>Eff.</th><th>%Δ Eff.</th></tr></thead>
+      <tbody>
+        <tr><td>Prospects Newgora ✅</td><td>Astro Fr</td><td>212</td><td class="up">+7,6%</td><td>197</td><td>93,0%</td><td>28</td><td>13%</td><td class="up">+5,6%</td></tr>
+        <tr><td>Prospect (autre Fr)</td><td>—</td><td>64</td><td class="dn">-11,1%</td><td>63</td><td>98,4%</td><td>20</td><td>31%</td><td class="dn">-2,5%</td></tr>
+        <tr><td>Astrocenter TV</td><td>Astro Fr</td><td>54</td><td class="dn">-31,6%</td><td>51</td><td>94,4%</td><td>11</td><td>21%</td><td class="up">+11,8%</td></tr>
+        <tr><td>Media</td><td>Astro Fr</td><td>30</td><td class="up">+25,0%</td><td>28</td><td>93,3%</td><td>5</td><td>19%</td><td class="dn">-39,6%</td></tr>
+        <tr><td>Slot TV 🔴</td><td>Astro Fr</td><td>24</td><td class="up">+41,2%</td><td>24</td><td>100%</td><td>1</td><td>5%</td><td class="dn">-77,6%</td></tr>
+        <tr><td>Newgora 🔴</td><td>Psy Fr</td><td>21</td><td class="dn">-68,2%</td><td>19</td><td>90,5%</td><td>2</td><td>10%</td><td class="dn">-32,2%</td></tr>
+        <tr><td>Partenaires</td><td>Astro Fr</td><td>15</td><td class="up">+36,4%</td><td>11</td><td>73,3%</td><td>3</td><td>20%</td><td>—</td></tr>
+      </tbody>
+    </table>
+    <div class="alert"><strong>🚨 Slot TV & Newgora Psy Fr</strong> = priorités d'analyse Juin (audit Nermine).</div>
+    <div class="success"><strong>✅ Newgora Astro Fr</strong> : audit avril concluant, file stabilisée.</div>
+  </div>
+
+  <div class="card">
+    <h2>🇮🇹 Campagnes Prospect Italie</h2>
+    <table>
+      <thead><tr><th>File / Campagne</th><th>Source</th><th>#</th><th>%Δ</th><th>Traités</th><th>QS</th><th>MER</th><th>Eff.</th></tr></thead>
+      <tbody>
+        <tr><td>Partenaires</td><td>Astro It</td><td>145</td><td class="up">+16,0%</td><td>130</td><td>89,7%</td><td>10</td><td>7%</td></tr>
+        <tr><td>Newgora</td><td>Astro It</td><td>43</td><td class="dn">-14,0%</td><td>40</td><td>93,0%</td><td>13</td><td>31%</td></tr>
+        <tr><td>Media</td><td>Astro It</td><td>39</td><td class="dn">-36,1%</td><td>36</td><td>92,3%</td><td>7</td><td>17%</td></tr>
+        <tr><td>Organique</td><td>Astro It</td><td>31</td><td class="dn">-20,5%</td><td>29</td><td>93,5%</td><td>8</td><td>26%</td></tr>
+      </tbody>
+    </table>
+    <div class="success">Organique It : eff. +138,7% → à creuser pour réplication sur autres pays.</div>
+  </div>
+
+  <div class="card">
+    <h2>🛠 Capacités &amp; ressources campagnes</h2>
+    <table>
+      <thead><tr><th>Périmètre</th><th>Situation Mai</th><th>Évolution Juin</th></tr></thead>
+      <tbody>
+        <tr><td>Recouv FR</td><td>Réparti Laura + Nicole (insuffisant)</td><td><strong>1er juin :</strong> 30h/sem dédiées, objectif 100% campagnes</td></tr>
+        <tr><td>Recouv IT/ES</td><td>+82% vol, QS 19-23%</td><td>Extension réorganisation à valider</td></tr>
+        <tr><td>Campagne Flops ES</td><td>~15 profils experts 500-1000€</td><td>Démarrage Maira (production lundi)</td></tr>
+        <tr><td>Campagne Flops FR</td><td>Liste à transmettre par N. Defretin</td><td>Marta + Marinette à répartir</td></tr>
+        <tr><td>Vigie IT</td><td>-70,4% volumes, 0 MER</td><td>Causes à investiguer</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>🎯 Visibilité PRM/CRM Best Call — Feuille de route</h2>
+    <ul style="margin-left:18px;font-size:11.5px">
+      <li>📊 <strong>Dashboard Flash Prod</strong> : centralisation appels + tickets + back-office + rédactionnel + fidélisation (Marta + N. Defretin)</li>
+      <li>🏷️ <strong>Intégration tags marketing</strong> : Star / Medium / Low + Spark Rice + Glow sur Foxy (mapping F. Nardin)</li>
+      <li>📋 <strong>Traçabilité appels sortants</strong> : transcriptions Google Drive par pays (nommage date_expert_campagne) en attendant Foxy</li>
+      <li>🎫 <strong>Tickets Foxy</strong> : système d'assignation à définir pour retrouver les tickets fin de mois/semaine</li>
+      <li>📞 <strong>Indicateurs joignabilité</strong> : passer du "nb d'appels lancés" au "nb de personnes réellement jointes"</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>📤 Campagnes Recouvrement (sortantes) — Vue par annuaire</h2>
+    <table>
+      <thead><tr><th>Annuaire</th><th># Tentatives OK</th><th>%OK</th><th>€ Recouvrés Mai</th><th>%Δ €</th></tr></thead>
+      <tbody>
+        <tr><td>ita_ita</td><td>198</td><td>77%</td><td>8 849 €</td><td class="dn">-7,0%</td></tr>
+        <tr><td>fra_fra</td><td>245</td><td>44%</td><td>8 846 €</td><td class="dn">-11,1%</td></tr>
+        <tr><td>por_por</td><td>224</td><td>74%</td><td>7 154 €</td><td class="dn">-14,6%</td></tr>
+        <tr><td>esl_esl</td><td>98</td><td>72%</td><td>3 279 €</td><td class="up">+1,7%</td></tr>
+        <tr><td>esl_usa</td><td>36</td><td>80%</td><td>1 414 €</td><td class="dn">-21,7%</td></tr>
+        <tr><td>tur_deu</td><td>61</td><td>63%</td><td>1 410 €</td><td class="up">+56,9%</td></tr>
+      </tbody>
+    </table>
+    <div class="success"><strong>✅ tur_deu +56,9%</strong> malgré contexte difficile.</div>
+  </div>
+
+  <div class="card">
+    <h2>🎯 Synthèse campagnes — Recommandations</h2>
+    <table>
+      <thead><tr><th>Campagne</th><th>Constat</th><th>Action proposée</th></tr></thead>
+      <tbody>
+        <tr><td>Slot TV (Astro Fr)</td><td>Volume +41%, eff. 5% (-77,6%)</td><td>Audit immédiat — hypothèse nouvel affilié</td></tr>
+        <tr><td>Newgora Psy Fr</td><td>Vol. -68%, eff. 10% (-32%)</td><td>Audit qualité base</td></tr>
+        <tr><td>Newgora Astro Fr</td><td>Stabilisée (+5,6% eff.)</td><td>Capitaliser, dupliquer méthode</td></tr>
+        <tr><td>Recouv IT/ES</td><td>+82% vol, QS 19-23%</td><td>Étendre la réorganisation 1er juin</td></tr>
+        <tr><td>Organique It</td><td>+138,7% d'eff.</td><td>Augmenter volume, dupliquer pays</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ========== TICKETS ========== -->
+<section id="tickets" class="tab">
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">140</div><div class="l">Tickets créés</div><div class="d dn">vs 552 avril</div></div>
+    <div class="kpi"><div class="v">150</div><div class="l">Tickets traités</div><div class="d dn">vs 1 054 avril</div></div>
+    <div class="kpi"><div class="v">141</div><div class="l">Résolus</div><div class="d">94% des traités</div></div>
+    <div class="kpi"><div class="v">9</div><div class="l">Fermés</div></div>
+    <div class="kpi"><div class="v">99,7h</div><div class="l">Temps moyen résolution</div><div class="d dn">vs 60,9h avril</div></div>
+  </div>
+
+  <div class="alert"><strong>🚨 TMR en forte dégradation :</strong> 99,7h vs 60,9h en avril (+63,7%). <strong>Vigilance COPIL :</strong> Marta Alves doit vérifier si le volume est faussé par les actions du rôle superviseur sur Foxy.</div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2>📂 Par catégorie</h2>
+      <table>
+        <thead><tr><th>Catégorie</th><th>#</th><th>% du total</th></tr></thead>
+        <tbody>
+          <tr><td>Insatisfaction</td><td>~120</td><td>80%</td></tr>
+          <tr><td>Technique</td><td>~15</td><td>10%</td></tr>
+          <tr><td>Demande Informations</td><td>~5</td><td>3%</td></tr>
+          <tr><td>Hors Cible</td><td>~3</td><td>2%</td></tr>
+        </tbody>
+      </table>
+      <div class="comment"><strong>Demande COPIL :</strong> creuser au-delà de la typologie → comprendre les commentaires conseillères et solutions apportées (analyse qualitative via Foxy + notes vocales).</div>
+    </div>
+
+    <div class="card">
+      <h2>🏢 Par groupe (pays / périmètre)</h2>
+      <table>
+        <thead><tr><th>Groupe</th><th>#</th><th>%</th></tr></thead>
+        <tbody>
+          <tr><td>Client PT</td><td>~50</td><td>33%</td></tr>
+          <tr><td>Client ITA</td><td>~40</td><td>27%</td></tr>
+          <tr><td>Client FR</td><td>~35</td><td>23%</td></tr>
+          <tr><td>Client ES</td><td>~10</td><td>7%</td></tr>
+          <tr><td>Recouvrement ITA</td><td>~5</td><td>3%</td></tr>
+          <tr><td>Client LATAM</td><td>~3</td><td>2%</td></tr>
+          <tr><td>Recouvrement PT</td><td>~2</td><td>1%</td></tr>
+          <tr><td>Recouvrement FR</td><td>~1</td><td>1%</td></tr>
+        </tbody>
+      </table>
+      <div class="comment">Bascule par rapport à avril : Client PT devient n°1 (vs Client FR en avril).</div>
+    </div>
+  </div>
+
+  <div class="grid3">
+    <div class="card">
+      <h2>📨 Par sous-catégorie</h2>
+      <table>
+        <thead><tr><th>Sous-catégorie</th><th>#</th></tr></thead>
+        <tbody>
+          <tr><td>Remboursement facture / wallet / transaction / appel coupé</td><td>~140</td></tr>
+          <tr><td>SPAM</td><td>~3</td></tr>
+          <tr><td>Offres ou Bons d'achats</td><td>~2</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h2>📨 Par type</h2>
+      <table>
+        <thead><tr><th>Type</th><th>#</th></tr></thead>
+        <tbody>
+          <tr><td>Email</td><td>~100</td></tr>
+          <tr><td>Botx</td><td>~38</td></tr>
+          <tr><td>CRM</td><td>~2</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h2>📊 Statuts</h2>
+      <table>
+        <thead><tr><th>Statut</th><th>#</th></tr></thead>
+        <tbody>
+          <tr><td>Résolu</td><td>141</td></tr>
+          <tr><td>Fermé</td><td>9</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>👤 Top conseillers Tickets</h2>
+    <table>
+      <thead><tr><th>Conseiller</th><th>Tickets traités</th></tr></thead>
+      <tbody>
+        <tr><td>Gabriela Vargas</td><td>~28</td></tr>
+        <tr><td>Andreia Brusco</td><td>~26</td></tr>
+        <tr><td>Sandra Seixas</td><td>~18</td></tr>
+        <tr><td>Ana Gaspar</td><td>~10</td></tr>
+        <tr><td>Mialayne Ribeiro</td><td>~5</td></tr>
+        <tr><td>Renan Angelo</td><td>~4</td></tr>
+        <tr><td>Angela Teixeira</td><td>~4</td></tr>
+        <tr><td>Marina Silva</td><td>~3</td></tr>
+      </tbody>
+    </table>
+    <div class="comment">Répartition plus équilibrée vs avril (bestsup dominant disparaît dans cette vue).</div>
+  </div>
+</section>
+
+<!-- ========== DISCUSSION ========== -->
+<section id="discussion" class="tab">
+  <div class="card">
+    <h2>💬 Guide de discussion Copil — Mai 2026</h2>
+    <div class="comment">
+      <strong>Nouveautés Mai :</strong> activation org Recouv 1er juin, décisions COPIL 13/05, suivi des actions avril, propositions Juin.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>1. Questions clés à poser en séance</h2>
+    <table>
+      <thead><tr><th>#</th><th>Périmètre</th><th>Question</th><th>Priorité</th><th>Pilote pressenti</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Recouvrement</td>
+          <td>Inactifs explosent à 7 992 (+76,2% vs 4 559 en avril). La nouvelle org 1er juin (30h/sem FR) sera-t-elle suffisante pour absorber le volume ?</td>
+          <td><span class="badge badge-r">Critique</span></td>
+          <td>Direction + Ops Recouv</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Recouv IT/ES</td>
+          <td>Volumes +82% sur IT et ES, mais QS chute à 19-23%. Faut-il étendre la réorganisation au-delà du FR ?</td>
+          <td><span class="badge badge-r">Critique</span></td>
+          <td>Direction + Ops Recouv</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Tickets</td>
+          <td>TMR 99,7h vs 60,9h en avril (+63,7%). Biais lié au rôle superviseur ? Stabilisation Foxy effective ?</td>
+          <td><span class="badge badge-r">Critique</span></td>
+          <td>Ops Tickets + Marta</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Prospect FR</td>
+          <td>Slot TV eff 5% (-77,6%) et Newgora Psy Fr -68,2% volumes / eff 10%. Nouvel affilié influençant ? Audit nécessaire.</td>
+          <td><span class="badge badge-r">Critique</span></td>
+          <td>Nermine + Ops Prospect</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>🇵🇹 Portugal</td>
+          <td>New Buyer PT : volumes +26,7% mais efficacité -25,7% (joignabilité &lt; 40%). Faux numéros ou proposition de valeur inadaptée ?</td>
+          <td><span class="badge badge-y">Élevé</span></td>
+          <td>Direction commerciale PT</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>Vigie IT</td>
+          <td>Vigie IT s'effondre (-69,4% vol, 0 MER). Cause à investiguer.</td>
+          <td><span class="badge badge-y">Élevé</span></td>
+          <td>Ops Vigie</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>🇹🇷 Turquie</td>
+          <td>Inactifs +240% → 80% des experts potentiellement en compte négatif en juin. Préparer l'assainissement.</td>
+          <td><span class="badge badge-y">Élevé</span></td>
+          <td>Direction commerciale TR</td>
+        </tr>
+      </tr>
+      <tr>
+        <td>8</td>
+        <td>Pilotage</td>
+        <td>Dashboard Flash Prod (appels + tickets + back-office + rédactionnel + fidélisation) + intégration tags marketing Star/Medium/Low : quel calendrier de mise en œuvre ?</td>
+        <td><span class="badge badge-b">À éclairer</span></td>
+        <td>Best Call + F. Nardin</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="card">
+  <h2>2. Suivi des actions du COPIL précédent (avril)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Action</th>
+        <th>Pilote</th>
+        <th>Échéance initiale</th>
+        <th>Statut Mai</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Catégorisation systématique des tickets (~340 non catégorisés)</td>
+        <td>Ops Tickets</td>
+        <td>Mai 2026</td>
+        <td><span class="badge badge-y">En cours</span></td>
+      </tr>
+      <tr>
+        <td>Renforcement de l'équipe Recouvrement PT/FR</td>
+        <td>RH + Ops</td>
+        <td>Avril 2026</td>
+        <td><span class="badge badge-g">Décidé — Org 1er juin</span></td>
+      </tr>
+      <tr>
+        <td>Refonte des scripts Vigie N1 (réduction Hors-Cibles 62%)</td>
+        <td>Ops Vigie</td>
+        <td>Avril 2026</td>
+        <td><span class="badge badge-b">Suspendu — causes structurelles</span></td>
+      </tr>
+      <tr>
+        <td>Audit qualité fichiers Newgora Astro Fr</td>
+        <td>Partenaire + Ops</td>
+        <td>Mai 2026</td>
+        <td><span class="badge badge-y">En cours — file stabilisée (+5,6% eff.)</span></td>
+      </tr>
+      <tr>
+        <td>Sprint catégorisation ~340 tickets + alerte TMR &gt; 48h</td>
+        <td>Ops Tickets</td>
+        <td>Mai 2026</td>
+        <td><span class="badge badge-r">À relancer — TMR dégradé 99,7h</span></td>
+      </tr>
+      <tr>
+        <td>Reporting hebdo Best Call PRM/CRM</td>
+        <td>Best Call + Pilotage</td>
+        <td>Mai 2026</td>
+        <td><span class="badge badge-b">À lancer — intégré au Dashboard Flash Prod</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="card">
+  <h2>3. Format de séance proposé (≈ 70 min)</h2>
+  <div class="kpi-row">
+    <div class="kpi">
+      <div class="v">15 min</div>
+      <div class="l">Tour d'horizon</div>
+      <div class="d">KPIs globaux, volumes, évolutions Avril→Mai</div>
+    </div>
+    <div class="kpi">
+      <div class="v">25 min</div>
+      <div class="l">Zooms critiques</div>
+      <div class="d">Recouv Inactifs 7 992 · 🇵🇹 New Buyer · Slot TV / Psy Fr</div>
+    </div>
+    <div class="kpi">
+      <div class="v">15 min</div>
+      <div class="l">Campagnes &amp; Capacités</div>
+      <div class="d">Activation Org 1er juin, Flops ES/FR, Dashboard Flash Prod</div>
+    </div>
+    <div class="kpi">
+      <div class="v">15 min</div>
+      <div class="l">Plan Juin</div>
+      <div class="d">Décisions, arbitrages, actions &amp; pilotes</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>4. Propositions d'actions — Juin 2026</h2>
+  <table>
+    <thead><tr><th>Périmètre</th><th>Action</th><th>Pilote</th><th>Échéance</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Recouvrement FR</td>
+        <td>Activation nouvelle org au 1er juin (30h/sem dédiées, remplace Laura + Nicole) — objectif <strong>100% des campagnes traitées</strong></td>
+        <td>Direction + Ops</td>
+        <td>1er juin</td>
+      </tr>
+      <tr>
+        <td>Recouvrement IT/ES</td>
+        <td>Évaluer extension de la réorganisation (vagues +82% vol., QS 19-23%)</td>
+        <td>Direction + Ops</td>
+        <td>Juin S2</td>
+      </tr>
+      <tr>
+        <td>Prospect FR</td>
+        <td>Audit Slot TV (eff. 5%) et Newgora Psy Fr (-68,2% vol) — hypothèse nouvel affilié</td>
+        <td>Nermine + Partenaire</td>
+        <td>Juin S1</td>
+      </tr>
+      <tr>
+        <td>🇵🇹 Portugal</td>
+        <td>Segmentation joignabilité New Buyer PT (faux n° vs proposition de valeur) — eff. 39,7%</td>
+        <td>Direction commerciale PT</td>
+        <td>Juin</td>
+      </tr>
+      <tr>
+        <td>🇹🇷 Turquie</td>
+        <td>Préparer l'assainissement parc TR (80% experts potentiellement négatifs)</td>
+        <td>Direction commerciale TR</td>
+        <td>Juin</td>
+      </tr>
+      <tr>
+        <td>Tickets</td>
+        <td>Vérifier biais TMR lié au rôle superviseur Foxy — analyse qualitative commentaires/solutions</td>
+        <td>Marta Alves</td>
+        <td>Juin S1</td>
+      </tr>
+      <tr>
+        <td>Campagne Flops ES</td>
+        <td>Démarrage Maira sur 15 profils experts 500-1000€</td>
+        <td>Maira</td>
+        <td>Lundi</td>
+      </tr>
+      <tr>
+        <td>Campagne Flops FR</td>
+        <td>Transmission liste N. Defretin → Marta + Marinette pour répartition</td>
+        <td>N. Defretin + Marta</td>
+        <td>Juin S1</td>
+      </tr>
+      <tr>
+        <td>Pilotage transverse</td>
+        <td>Mise en ligne du Dashboard Flash Prod (appels + tickets + back-office + rédactionnel + fidélisation) + intégration tags Star/Medium/Low + Spark Rice + Glow</td>
+        <td>Best Call + F. Nardin</td>
+        <td>Juin</td>
+      </tr>
+      <tr>
+        <td>Traçabilité sortants</td>
+        <td>Mise en place Google Drive par pays (nommage date_expert_campagne) en attendant Foxy</td>
+        <td>Best Call</td>
+        <td>Juin S1</td>
+      </tr>
+      <tr>
+        <td>Reporting marché</td>
+        <td>Ajouter colonne "contribution Bestcall aux objectifs marché" (proposition F. Nardin)</td>
+        <td>Pilotage</td>
+        <td>Juin</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+</section>
+
+<script>
+(function(){
+const STORAGE_KEY = "dashboard-2026-05:tab";
+const tabs = document.querySelectorAll("nav button[data-t]");
+const sections = document.querySelectorAll("section.tab");
+
+function activate(id){
+  tabs.forEach(t => t.classList.toggle("active", t.dataset.t === id));
+  sections.forEach(s => s.classList.toggle("active", s.id === id));
+  try { localStorage.setItem(STORAGE_KEY, id); } catch(e){}
+}
+
+tabs.forEach(t => t.addEventListener("click", () => activate(t.dataset.t)));
+
+let initial = "copil";
+try {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved && document.getElementById(saved)) initial = saved;
+} catch(e){}
+activate(initial);
+})();
+</script>
+
+</body>
+</html>
