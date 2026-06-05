@@ -15,7 +15,8 @@
       "description": "Suivi opérationnel des experts et de leur activité",
       "icon": "🎓",
       "dashboards": [
-        { "id": "2026-04-ex",    "label": "Avril 2026",            "file": "./dashboards/expert/2026-04-ex.html" }
+        { "id": "2026-04-ex",    "label": "Avril 2026",            "file": "./dashboards/expert/2026-04-ex.html" },
+        { "id": "2026-05-ex",    "label": "Mai 2026",            "file": "./dashboards/expert/2026-05-ex.html" }
       ]
     }
   }
