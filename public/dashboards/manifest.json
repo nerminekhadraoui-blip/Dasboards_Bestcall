@@ -9,7 +9,8 @@
         { "id": "2026-04-mi", "label": "Avril 2026 (mi-mois)", "file": "./dashboards/client/2026-04-mi.html" },
         { "id": "2026-04",    "label": "Avril 2026",           "file": "./dashboards/client/2026-04.html" },
         { "id": "2026-05",    "label": "Mai 2026",           "file": "./dashboards/client/2026-05.html" },
-        { "id": "2026-06-mi", "label": "Juin 2026 (mi-mois)", "file": "./dashboards/client/2026-06-mi.html" }
+        { "id": "2026-06-mi",    "label": "Mi juin 2026",           "file": "./dashboards/client/2026-06-mi.html" },
+        { "id": "2026-06",    "label": "Juin 2026",           "file": "./dashboards/client/2026-06.html" }
 
       ]
     },
