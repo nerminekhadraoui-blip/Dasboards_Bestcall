@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Copil BestCall — Août 2026</title>
+<style>
+:root{
+  --brand-dark:#2B4455;--brand-accent:#C68779;--brand-muted:#707E88;--white:#FFFFFF;
+  --bg:#f3f6f8;--bg-soft:#f8fafc;--line:#e2e8f0;--line-soft:#edf2f7;
+  --text:#1e293b;--text-soft:#475569;
+  --success:#16a34a;--danger:#dc2626;--info:#3b82f6;--warning:#eab308;
+  --shadow-sm:0 1px 3px rgba(15,23,42,.08);--shadow-md:0 10px 30px rgba(43,68,85,.08);
+  --radius-md:10px;--radius-lg:14px;--radius-xl:18px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:system-ui,-apple-system,sans-serif;
+  background:radial-gradient(circle at top right,rgba(198,135,121,.10),transparent 22%),
+  radial-gradient(circle at bottom left,rgba(43,68,85,.08),transparent 24%),var(--bg);
+  color:var(--text);font-size:13px;line-height:1.45}
+header{background:linear-gradient(135deg,var(--brand-dark) 0%,#37576b 60%,var(--brand-accent) 100%);
+  color:var(--white);padding:24px 32px;box-shadow:0 12px 24px rgba(43,68,85,.16)}
+header h1{font-size:22px;font-weight:700;letter-spacing:-.01em}
+header .sub{font-size:12px;opacity:.82;margin-top:6px}
+nav{display:flex;background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);
+  padding:0 12px;overflow-x:auto;position:sticky;top:0;z-index:10;backdrop-filter:blur(8px)}
+nav button{padding:12px 16px;border:none;background:none;font-size:12px;font-weight:600;
+  color:var(--brand-muted);cursor:pointer;border-bottom:3px solid transparent;
+  white-space:nowrap;transition:.18s ease}
+nav button:hover{color:var(--brand-accent)}
+nav button.active{color:var(--brand-dark);border-bottom-color:var(--brand-accent)}
+.tab{display:none;padding:20px;max-width:1480px;margin:0 auto}
+.tab.active{display:block}
+.card{background:rgba(255,255,255,.94);border:1px solid rgba(226,232,240,.9);
+  border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:18px 20px;margin-bottom:18px}
+.card h2{font-size:15px;margin-bottom:10px;color:var(--brand-dark);
+  border-bottom:2px solid var(--line);padding-bottom:7px}
+.card h3{font-size:13px;margin:14px 0 8px;color:var(--text-soft)}
+table{width:100%;border-collapse:collapse;font-size:11.5px;margin-bottom:6px}
+thead th{background:var(--bg-soft);font-weight:600;text-align:right;padding:7px 8px;
+  border-bottom:2px solid var(--line);color:var(--text-soft);white-space:nowrap}
+thead th:first-child{text-align:left}
+td{padding:6px 8px;border-bottom:1px solid var(--line-soft);text-align:right;white-space:nowrap}
+td:first-child{text-align:left;font-weight:500}
+tbody tr:hover{background:#fafcff}
+tr.dim td{color:#b0b8c4!important;font-weight:400!important}
+tr.total td{background:#f1f5f9;font-weight:700;border-top:2px solid var(--line)}
+.up{color:var(--success)}.dn{color:var(--danger)}
+tr.dim .up,tr.dim .dn{color:#b0b8c4!important}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+@media (max-width:1100px){.grid3{grid-template-columns:1fr 1fr}}
+@media (max-width:800px){.grid2,.grid3{grid-template-columns:1fr}}
+.kpi-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.kpi{flex:1;min-width:130px;background:rgba(255,255,255,.96);
+  border:1px solid rgba(226,232,240,.9);border-radius:var(--radius-md);
+  padding:14px;box-shadow:var(--shadow-sm);text-align:center}
+.kpi .v{font-size:22px;font-weight:700;color:var(--brand-dark)}
+.kpi .l{font-size:10px;color:var(--brand-muted);margin-top:3px;
+  text-transform:uppercase;letter-spacing:.04em}
+.kpi .d{font-size:11px;margin-top:2px}
+.comment{background:#eff6ff;border-left:4px solid var(--info);border-radius:0 8px 8px 0;
+  padding:10px 14px;margin:10px 0;font-size:11.5px;line-height:1.55;color:#1e40af}
+.comment strong{color:var(--brand-dark)}
+.alert{background:#fef2f2;border-left:4px solid #ef4444;border-radius:0 8px 8px 0;
+  padding:10px 14px;margin:10px 0;font-size:11.5px;line-height:1.55;color:#991b1b}
+.success{background:#f0fdf4;border-left:4px solid #22c55e;border-radius:0 8px 8px 0;
+  padding:10px 14px;margin:10px 0;font-size:11.5px;line-height:1.55;color:#166534}
+.copil-block{background:#fefce8;border-left:4px solid var(--warning);
+  border-radius:0 8px 8px 0;padding:12px 16px;margin:10px 0;
+  font-size:12px;line-height:1.6;color:#854d0e}
+.copil-block ul{margin:6px 0 0 16px}
+.copil-block li{margin-bottom:4px}
+.note{font-size:10.5px;color:#94a3b8;font-style:italic;margin:4px 0 8px}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;
+  font-size:10px;font-weight:600;margin-left:6px}
+.badge-g{background:#dcfce7;color:#166534}
+.badge-r{background:#fee2e2;color:#991b1b}
+.badge-y{background:#fef9c3;color:#854d0e}
+.badge-b{background:#dbeafe;color:#1e40af}
+.flag-pt{background:linear-gradient(135deg,#fef3c7,#fde68a);padding:14px;border-radius:10px;margin-bottom:12px}
+.bar-wrap{background:#e2e8f0;border-radius:6px;height:14px;position:relative;overflow:hidden;width:100%;min-width:100px}
+.bar{height:100%;border-radius:6px;background:linear-gradient(90deg,#3b82f6,#60a5fa)}
+.bar-g{background:linear-gradient(90deg,#16a34a,#4ade80)}
+.bar-r{background:linear-gradient(90deg,#dc2626,#f87171)}
+.bar-y{background:linear-gradient(90deg,#eab308,#facc15)}
+.mini-kpi{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+.mini-kpi .m{flex:1;min-width:110px;background:#f8fafc;border:1px solid var(--line);
+  border-radius:8px;padding:8px 10px}
+.mini-kpi .mv{font-size:16px;font-weight:700;color:var(--brand-dark)}
+.mini-kpi .ml{font-size:10px;color:var(--brand-muted);text-transform:uppercase}
+.tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:600}
+.tag-new{background:#dcfce7;color:#166534}
+.tag-reg{background:#dbeafe;color:#1e40af}
+.tag-inact{background:#fee2e2;color:#991b1b}
+.tag-occ{background:#fef9c3;color:#854d0e}
+.section-anchor{scroll-margin-top:60px}
+.muted{color:#94a3b8;font-size:11px;font-style:italic}
+details{margin:10px 0}
+details summary{cursor:pointer;font-size:12.5px;font-weight:700;color:var(--white);
+  background:var(--brand-accent);
+  padding:12px 16px;border-radius:var(--radius-md);list-style:none;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  box-shadow:var(--shadow-sm);transition:filter .15s ease}
+details summary:hover{filter:brightness(1.08)}
+details summary::-webkit-details-marker{display:none}
+details summary::marker{display:none;content:""}
+details summary::after{content:"Cliquer pour déplier ▾";font-size:10px;font-weight:600;
+  opacity:.85;white-space:nowrap;background:rgba(255,255,255,.18);padding:4px 9px;border-radius:12px}
+details[open] summary::after{content:"Cliquer pour replier ▴"}
+details[open] summary{border-radius:var(--radius-md) var(--radius-md) 0 0;margin-bottom:0}
+details[open] > summary + *{margin-top:0}
+.direction{background:#f5f3ff;border-left:4px solid #8b5cf6;border-radius:0 8px 8px 0;
+  padding:10px 14px;margin:8px 0;font-size:11.5px;line-height:1.55;color:#5b21b6}
+.direction strong{color:#4c1d95}
+.month-conclusion{background:linear-gradient(135deg,rgba(22,163,74,.07),rgba(198,135,121,.10));
+  border:1px solid rgba(22,163,74,.25);border-radius:var(--radius-xl);
+  padding:20px 24px;margin-bottom:18px;box-shadow:var(--shadow-md);position:relative;overflow:hidden}
+.month-conclusion::before{content:"";position:absolute;top:0;left:0;width:6px;height:100%;
+  background:linear-gradient(180deg,#16a34a,var(--brand-accent))}
+.month-conclusion .mc-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.month-conclusion .mc-badge{display:inline-flex;align-items:center;gap:6px;background:#dcfce7;
+  color:#166534;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;
+  text-transform:uppercase;letter-spacing:.03em}
+.month-conclusion h2{font-size:16px;color:var(--brand-dark);border:none;padding:0;margin:0}
+.month-conclusion p{font-size:12.5px;line-height:1.7;color:var(--text)}
+.month-conclusion .mc-highlights{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px}
+.month-conclusion .mc-highlights span{background:rgba(255,255,255,.7);border:1px solid rgba(22,163,74,.2);
+  border-radius:8px;padding:6px 12px;font-size:11px;font-weight:600;color:var(--brand-dark)}
+.data-placeholder{border:2px dashed var(--brand-accent);border-radius:var(--radius-md);
+  background:repeating-linear-gradient(135deg,rgba(198,135,121,.05),rgba(198,135,121,.05) 10px,rgba(198,135,121,.09) 10px,rgba(198,135,121,.09) 20px);
+  padding:14px 16px;margin:12px 0}
+.data-placeholder .dp-title{font-weight:700;color:var(--brand-dark);display:flex;align-items:center;
+  gap:8px;margin-bottom:6px;font-size:12.5px;flex-wrap:wrap}
+.data-placeholder .dp-tag{display:inline-block;background:#fef3c7;color:#854d0e;font-size:9.5px;
+  font-weight:700;padding:3px 9px;border-radius:10px;text-transform:uppercase;letter-spacing:.03em}
+.data-placeholder p{font-size:11.5px;line-height:1.6;color:var(--text-soft);margin:0}
+.data-placeholder .dp-need{font-size:10.5px;color:var(--brand-accent);font-weight:600;margin-top:6px}
+.case-card{background:#fafbfc;border:1px solid var(--line);border-left:4px solid var(--brand-accent);
+  border-radius:0 var(--radius-md) var(--radius-md) 0;padding:14px 18px;margin:14px 0}
+.case-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.case-letter{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;
+  border-radius:50%;background:var(--brand-dark);color:#fff;font-weight:700;font-size:12px;flex-shrink:0}
+.case-head h4{font-size:13px;color:var(--brand-dark);margin:0}
+.case-facts{margin:0 0 10px 0;padding:0;list-style:none}
+.case-facts li{font-size:11.5px;line-height:1.6;color:var(--text);margin-bottom:5px;padding-left:16px;position:relative}
+.case-facts li::before{content:"›";position:absolute;left:0;color:var(--brand-accent);font-weight:700}
+.case-facts li strong{color:var(--brand-dark)}
+.case-quote{background:#fff;border:1px dashed rgba(198,135,121,.4);border-radius:8px;
+  padding:8px 12px;margin:8px 0;font-size:11.5px;font-style:italic;color:#5b4636}
+.case-quote .translation{display:block;font-style:normal;color:#94a3b8;font-size:10.5px;margin-top:3px}
+.case-friction{background:#fef2f2;border-radius:6px;padding:8px 12px;font-size:11.5px;
+  line-height:1.55;color:#991b1b;margin-top:8px}
+.case-friction strong{color:#7f1d1d}
+</style>
+
+<header>
+  <h1>📊 Copil BestCall — Août 2026 <span style="font-size:13px;opacity:.7">Synthèse d'activité &amp; valeur ajoutée</span></h1>
+  <div class="sub">Client/Prospect · Expert (entrant/sortant) · Vigie/CAS · Recouvrement · Taux d'occupation — Période du 01 au 31/08</div>
+</header>
+
+<nav>
+  <button class="active" data-t="copil">🎯 Synthèse</button>
+  <button data-t="clientprospect">Client / Prospect</button>
+  <button data-t="expertin">Expert entrant</button>
+  <button data-t="expertout">Expert sortant</button>
+  <button data-t="vigie">Vigie / CAS</button>
+  <button data-t="recouv">Recouvrement</button>
+  <button data-t="occupation">Taux d'occupation</button>
+  <button data-t="attendu">🚀 Attendu de Wengo</button>
+  <button data-t="discussion">💬 Discussion</button>
+</nav>
+
+<!-- ========== SYNTHESE / COPIL ========== -->
+<section id="copil" class="tab active">
+
+  <div class="card">
+    <h2>🎯 Ce que ce Copil doit vous permettre de vérifier</h2>
+    <div class="comment">
+      Trois attentes Wengo guident ce support : <strong>le traitement des flux</strong>, <strong>l'efficacité de mise en relation</strong>,
+      et <strong>la qualité du traitement même sans mise en relation</strong>. Support narratif, pauvre en chiffres bruts — le détail
+      complet reste disponible sur les dashboards Data Studio.
+    </div>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">32 541</div><div class="l">Appels traités (in+out)</div><div class="d up">+3,0%</div></div>
+    <div class="kpi"><div class="v">16 723</div><div class="l">Dossiers traités</div><div class="d up">+0,4%</div></div>
+    <div class="kpi"><div class="v">51%</div><div class="l">Qualité de service</div><div class="d dn">-2,5 pts</div></div>
+    <div class="kpi"><div class="v">5 322</div><div class="l">Mises en relation / RDV</div><div class="d up">+2,0%</div></div>
+    <div class="kpi"><div class="v">32%</div><div class="l">Efficacité globale</div><div class="d up">+1,6 pt</div></div>
+  </div>
+
+  <div class="month-conclusion">
+    <div class="mc-head">
+      <span class="mc-badge">✅ Bilan du mois</span>
+      <h2>Meilleur mois de Recouvrement depuis fin 2025</h2>
+    </div>
+    <p>
+      Le volume repart à la hausse (+3,0%) après le repli de juillet, porté par la France (+45,9% sur le Client/Prospect) et l'Espagne.
+      <strong>41 986€ recouvrés par BestCall (+24,1%)</strong>, 3ᵉ mois de hausse consécutif — l'un des meilleurs mois depuis le début du suivi.
+    </p>
+    <div class="mc-highlights">
+      <span>💶 Recouvrement BestCall : 41 986€ (+24,1%)</span>
+      <span>📈 Volume global en reprise (+3,0%)</span>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2>✅ Points forts du mois</h2>
+      <div class="success">💶 <strong>Recouvrement :</strong> 41 986€ (+24,1%), 3ᵉ mois de hausse consécutif.</div>
+      <div class="success">🇫🇷 <strong>France Client/Prospect :</strong> +45,9% de volume avec une efficacité stable (+0,6 pt).</div>
+      <div class="success">💫 <strong>Experts Rédac :</strong> VA en forte hausse (+26,8%), 271 transactions.</div>
+      <div class="success">🚨 <strong>SOS :</strong> seulement 14 signalements (vs 25 en juillet), tous de nature technique — aucune urgence vitale identifiée ce mois-ci dans la catégorisation reçue.</div>
+      <div class="success">🎧 <strong>Occupation :</strong> 84,6% de temps productif, aucune anomalie de données ce mois-ci.</div>
+    </div>
+    <div class="card">
+      <h2>⚠ À surveiller</h2>
+      <div class="alert">📞 <strong>Coupures à ~30 min :</strong> problème identifié sur plusieurs experts au Portugal et en Italie (voir onglet Expert) — impact direct sur le revenu et la confiance envers le support technique.</div>
+      <div class="alert">🚨 <strong>Protection des experts (P0) :</strong> plusieurs cas de clients agressifs ou de blocages difficiles à gérer le week-end — priorité absolue de l'analyse qualitative de ce mois.</div>
+    </div>
+  </div>
+
+  <details>
+    <summary>Voir le détail — Volume global par sens et par marché</summary>
+    <div class="grid2">
+      <div class="card" style="box-shadow:none;border:1px solid var(--line-soft)">
+        <h3>Entrant / Sortant</h3>
+        <table>
+          <thead><tr><th>Sens</th><th>#</th><th>%Δ</th><th>Traités</th><th>Eff.</th><th>%Traités</th></tr></thead>
+          <tbody>
+            <tr><td>📥 Entrant</td><td>10 138</td><td class="up">+7,0%</td><td>9 876</td><td>52,0%</td><td>59%</td></tr>
+            <tr><td>📤 Sortant</td><td>22 403</td><td class="up">+1,3%</td><td>6 847</td><td>2,8%</td><td>41%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card" style="box-shadow:none;border:1px solid var(--line-soft)">
+        <h3>Par marché</h3>
+        <table>
+          <thead><tr><th>Pays</th><th>#</th><th>%Δ</th><th>Eff.</th><th>%Δ Eff.</th></tr></thead>
+          <tbody>
+            <tr><td>🇫🇷 France</td><td>11 401</td><td class="up">+6,3%</td><td>18,3%</td><td class="up">+38,3%</td></tr>
+            <tr><td>🇵🇹 Portugal</td><td>7 149</td><td class="dn">-7,7%</td><td>53,8%</td><td class="dn">-1,5%</td></tr>
+            <tr><td>🇪🇸 Espagne</td><td>5 929</td><td class="up">+34,4%</td><td>28,9%</td><td class="up">+1,5%</td></tr>
+            <tr><td>🇮🇹 Italie</td><td>5 928</td><td class="dn">-0,9%</td><td>23,6%</td><td class="up">+15,1%</td></tr>
+            <tr><td>🇹🇷 Turquie</td><td>1 295</td><td class="dn">-25,8%</td><td>49,4%</td><td class="dn">-3,6%</td></tr>
+            <tr class="dim"><td>🌎 Latino</td><td>818</td><td class="dn">-12,9%</td><td>2,3%</td><td class="dn">-84,2%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </details>
+
+  <details>
+    <summary>Voir le détail — Volume par famille de files d'attente</summary>
+    <div class="note">« Sortant ? » : 0 = entrant, 1 = sortant. Pas de séparation Prospect/Client ce mois-ci (fusion confirmée).</div>
+    <table>
+      <thead><tr><th>Famille</th><th>Sortant ?</th><th>#</th><th>%Δ</th><th>Traités</th><th>%Δ</th><th>QS</th><th>%Δ</th><th>MER/RDV</th><th>%Δ</th><th>Eff.</th><th>%Δ</th></tr></thead>
+      <tbody>
+        <tr><td>💰 Recouvrement (sortant)</td><td>1</td><td>17 976</td><td class="up">+6,0%</td><td>4 750</td><td class="dn">-1,8%</td><td>26%</td><td class="dn">-7,4%</td><td>4</td><td class="dn">-20,0%</td><td>0%</td><td class="dn">-18,5%</td></tr>
+        <tr><td>👤 Client (entrant)</td><td>0</td><td>9 519</td><td class="up">+10,5%</td><td>9 292</td><td class="up">+10,0%</td><td>98%</td><td class="dn">-0,4%</td><td>4 884</td><td class="up">+3,1%</td><td>53%</td><td class="dn">-6,3%</td></tr>
+        <tr><td>🛡️ Vigie (sortant)</td><td>1</td><td>2 545</td><td class="up">+12,3%</td><td>1 053</td><td class="up">+6,1%</td><td>41%</td><td class="dn">-5,5%</td><td>85</td><td class="dn">-14,1%</td><td>8%</td><td class="dn">-19,1%</td></tr>
+        <tr><td>👤 Client (sortant)</td><td>1</td><td>1 319</td><td class="dn">-28,9%</td><td>758</td><td class="dn">-28,9%</td><td>57%</td><td>0,0%</td><td>97</td><td class="up">+5,4%</td><td>13%</td><td class="up">+48,3%</td></tr>
+        <tr><td>🔥 Expert (sortant)</td><td>1</td><td>188</td><td class="dn">-2,6%</td><td>134</td><td class="dn">-9,5%</td><td>71%</td><td class="dn">-7,1%</td><td>1</td><td class="dn">-80,0%</td><td>1%</td><td class="dn">-77,9%</td></tr>
+        <tr><td>🔥 Expert (entrant)</td><td>0</td><td>197</td><td class="up">+2,1%</td><td>188</td><td class="dn">-0,5%</td><td>95%</td><td class="dn">-2,5%</td><td>8</td><td class="dn">-27,3%</td><td>4%</td><td class="dn">-26,9%</td></tr>
+        <tr><td>📇 PRM (campagne)</td><td>1</td><td>152</td><td class="dn">-28,6%</td><td>22</td><td class="dn">-58,5%</td><td>14%</td><td class="dn">-41,8%</td><td>1</td><td>0,0%</td><td>5%</td><td class="up">+140,9%</td></tr>
+        <tr><td>📇 CRM (campagne)</td><td>1</td><td>129</td><td class="dn">-74,1%</td><td>96</td><td class="dn">-58,6%</td><td>74%</td><td class="up">+60,1%</td><td>0</td><td class="dn">-100,0%</td><td>0%</td><td class="dn">-100,0%</td></tr>
+        <tr class="dim"><td>Autre (entrant)</td><td>0</td><td>422</td><td class="up">+28,3%</td><td>396</td><td class="up">+28,2%</td><td>94%</td><td>-0,1%</td><td>240</td><td class="up">+25,7%</td><td>61%</td><td class="dn">-2,0%</td></tr>
+        <tr class="dim"><td>Autre (sortant)</td><td>1</td><td>94</td><td class="up">+34,3%</td><td>34</td><td class="up">+6,3%</td><td>36%</td><td class="dn">-20,9%</td><td>2</td><td class="dn">-33,3%</td><td>6%</td><td class="dn">-37,3%</td></tr>
+      </tbody>
+    </table>
+    <div class="comment"><strong>Lecture :</strong> le Client sortant recule fortement (-28,9%) mais son efficacité bondit (+48,3%) — encore une fois, moins d'appels mais mieux ciblés.</div>
+  </details>
+
+</section>
+
+<!-- ========== CLIENT / PROSPECT ENTRANT ========== -->
+<section id="clientprospect" class="tab">
+  <div class="card">
+    <h2>🎁 Client / Prospect — Entrant &amp; Sortant</h2>
+    <div class="kpi-row">
+      <div class="kpi"><div class="v">10 138</div><div class="l">Appels entrants</div><div class="d up">+7,0%</div></div>
+      <div class="kpi"><div class="v">9 876</div><div class="l">Traités</div><div class="d up">+6,6%</div></div>
+      <div class="kpi"><div class="v">97%</div><div class="l">Qualité de service</div><div class="d dn">-0,4%</div></div>
+      <div class="kpi"><div class="v">5 132</div><div class="l">Mises en relation</div><div class="d up">+2,5%</div></div>
+      <div class="kpi"><div class="v">52%</div><div class="l">Efficacité</div><div class="d dn">-3,9%</div></div>
+    </div>
+    <div class="comment">
+      Les indicateurs de mise en relation ne racontent qu'une partie de l'histoire. Une part importante des appels entrants
+      est traitée <strong>sans</strong> déboucher sur une mise en relation immédiate — le besoin est identifié, traité ou orienté.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Par pays</h2>
+    <table>
+      <thead><tr><th>Pays</th><th>Total</th><th>%Δ</th><th>QS</th><th>Eff.</th><th>%Δ Eff.</th></tr></thead>
+      <tbody>
+        <tr><td>🇵🇹 Portugal</td><td>4 422</td><td class="dn">-11,5%</td><td>98,6%</td><td>58,5%</td><td class="dn">-3,3%</td></tr>
+        <tr><td>🇫🇷 France</td><td>2 457</td><td class="up">+45,9%</td><td>96,2%</td><td>45,6%</td><td class="up">+0,6%</td></tr>
+        <tr><td>🇮🇹 Italie</td><td>1 468</td><td class="up">+20,7%</td><td>97,2%</td><td>37,6%</td><td class="up">+3,1%</td></tr>
+        <tr><td>🇪🇸 Espagne</td><td>1 369</td><td class="up">+32,8%</td><td>97,2%</td><td>54,6%</td><td class="up">+2,2%</td></tr>
+        <tr class="dim"><td>🇹🇷 Turquie</td><td>404</td><td class="dn">-10,6%</td><td>95,0%</td><td>60,2%</td><td class="dn">-3,1%</td></tr>
+        <tr class="dim"><td>🇺🇸 USA</td><td>18</td><td class="up">+5,9%</td><td>66,7%</td><td>75,0%</td><td class="up">+82,1%</td></tr>
+      </tbody>
+    </table>
+    <div class="success"><strong>✅ France :</strong> le grand mouvement du mois — volume +45,9% avec une efficacité stable, le marché le plus dynamique. Espagne et Italie confirment aussi une belle progression d'efficacité.</div>
+    <div class="alert"><strong>⚠ Portugal :</strong> seul marché significatif en repli de volume (-11,5%) et d'efficacité (-3,3 pts) ce mois-ci.</div>
+  </div>
+
+  <details>
+    <summary>Voir le détail par campagne — France, Italie, Portugal</summary>
+    <div class="grid2">
+      <div>
+        <h3>France (2 457)</h3>
+        <table>
+          <thead><tr><th>File</th><th>#</th><th>%Δ</th><th>QS</th></tr></thead>
+          <tbody>
+            <tr><td>Client (Astro Fr)</td><td>2 386</td><td class="up">+98,5%</td><td>96,3%</td></tr>
+            <tr><td>Service Expert Fra - Center</td><td>32</td><td class="dn">-13,5%</td><td>96,9%</td></tr>
+            <tr><td>Service Expert Fra - Top</td><td>28</td><td class="dn">-24,3%</td><td>89,3%</td></tr>
+            <tr><td>Service Expert Fra - Flop</td><td>11</td><td class="dn">-26,7%</td><td>90,9%</td></tr>
+          </tbody>
+        </table>
+        <div class="note">Client (Astro Fr) quasi double (+98,5%) — porte l'essentiel de la hausse France du mois.</div>
+      </div>
+      <div>
+        <h3>Portugal (4 422)</h3>
+        <table>
+          <thead><tr><th>File</th><th>#</th><th>%Δ</th><th>QS</th></tr></thead>
+          <tbody>
+            <tr><td>Client (Pt)</td><td>4 409</td><td class="dn">-11,0%</td><td>98,6%</td></tr>
+            <tr><td>Service Expert Por - Top</td><td>7</td><td class="up">+75,0%</td><td>100,0%</td></tr>
+            <tr><td>Service Expert Por - Center</td><td>5</td><td class="dn">-28,6%</td><td>100,0%</td></tr>
+            <tr><td>Service Expert Por - Flop</td><td>1</td><td class="dn">-50,0%</td><td>100,0%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <h3>Italie (1 468)</h3>
+    <table>
+      <thead><tr><th>File</th><th>#</th><th>%Δ</th><th>QS</th></tr></thead>
+      <tbody>
+        <tr><td>Client (Astro It)</td><td>1 362</td><td class="up">+29,3%</td><td>97,2%</td></tr>
+        <tr><td>Service Expert Ita - Top</td><td>97</td><td class="up">+21,3%</td><td>96,9%</td></tr>
+        <tr><td>Service Expert Ita - Flop</td><td>6</td><td class="up">+50,0%</td><td>100,0%</td></tr>
+        <tr><td>Service Expert Ita - Center</td><td>3</td><td class="up">+200,0%</td><td>100,0%</td></tr>
+      </tbody>
+    </table>
+    <div class="note">Les files "Service Expert [pays] - Top/Center/Flop" correspondent au routage des appels entrants du Service Expert, comptabilisées dans le même flux Data Studio que le Client/Prospect. Détail qualitatif complet dans l'onglet Expert.</div>
+  </details>
+
+  <div class="card">
+    <h2>📤 Sortant — Campagnes Client/Prospect (CRM/PRM)</h2>
+    <table>
+      <thead><tr><th>Famille</th><th>#</th><th>%Δ</th><th>Traités</th><th>QS</th><th>Eff.</th></tr></thead>
+      <tbody>
+        <tr><td>👤 Client sortant</td><td>1 319</td><td class="dn">-28,9%</td><td>758</td><td>57%</td><td>13%</td></tr>
+        <tr><td>📇 PRM (campagne)</td><td>152</td><td class="dn">-28,6%</td><td>22</td><td>14%</td><td>5%</td></tr>
+        <tr><td>📇 CRM (campagne)</td><td>129</td><td class="dn">-74,1%</td><td>96</td><td>74%</td><td>0%</td></tr>
+      </tbody>
+    </table>
+    <div class="success">✅ QS CRM en forte hausse (+60,1 pts) malgré un volume en chute (-74,1%) — ciblage nettement resserré ce mois-ci.</div>
+  </div>
+
+  <div class="card">
+    <h2>🎫 Tickets Client (Foxi)</h2>
+    <div class="note">Vue d'ensemble tous tickets (client + expert) : 1 932 créés, 2 036 traités, 1 119 résolus, 874 fermés, 86,2h de temps moyen. Zoom sur le périmètre Client ci-dessous.</div>
+    <table>
+      <thead><tr><th>Groupe</th><th>~ Volume</th></tr></thead>
+      <tbody>
+        <tr><td>Client FR</td><td>~500</td></tr>
+        <tr><td>Client ITA</td><td>~230</td></tr>
+        <tr><td>Client ES</td><td>~180</td></tr>
+        <tr><td>Client PT</td><td>~160</td></tr>
+        <tr class="dim"><td>Client TR / LATAM / UK-USA / DE</td><td>~40</td></tr>
+      </tbody>
+    </table>
+    <h3>Frictions majeures — Tickets &amp; appels (500 tickets + 500 appels analysés, 11 thèmes)</h3>
+    <table>
+      <thead><tr><th>Thème</th><th>Occurrences</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Mise en relation échouée</strong></td><td>43</td><td>Appels/chats qui ne démarrent pas, bloqués, sans audio — touche clients ET experts</td></tr>
+        <tr><td><strong>Impayés et régularisation paiement</strong></td><td>35</td><td>Factures en attente, lien de paiement, blocage lié au dépassement de seuil</td></tr>
+        <tr><td>Remboursement après consultation interrompue</td><td>26</td><td>Demandes de remboursement total/partiel après coupure ou consultation trop courte</td></tr>
+        <tr><td>Suppression de compte</td><td>25</td><td>Demandes de suppression définitive, souvent impossible en autonomie</td></tr>
+        <tr><td>Impossible d'utiliser bons ou promos</td><td>22</td><td>Non-cumulabilité, conditions mal comprises</td></tr>
+        <tr><td>Compte bloqué et vérification d'identité</td><td>21</td><td>Blocage jusqu'à validation KYC / pièce d'identité</td></tr>
+        <tr><td>Avis et feedback contestés</td><td>11</td><td>Contestation d'avis négatifs, incohérences de notes affichées</td></tr>
+        <tr><td>Newsletter et désinscription</td><td>10</td><td>Désinscription automatique en échec</td></tr>
+      </tbody>
+    </table>
+    <div class="alert"><strong>⚠ Priorité n°1 :</strong> "Mise en relation échouée" (43) est le 1er thème du mois, tous canaux confondus — cohérent avec les coupures à ~30 minutes identifiées dans l'analyse qualitative Expert (voir onglet dédié). Impayés/paiement (35) et remboursement après coupure (26) forment un même bloc "paiement" à 61 occurrences cumulées.</div>
+  </div>
+
+  <div class="card">
+    <h2>🎯 Recommandations</h2>
+    <ul style="margin-left:18px;font-size:12px;line-height:1.9">
+      <li><strong>Investiguer la coupure à ~30 minutes</strong> en priorité — elle explique une bonne partie du 1er thème de friction ce mois-ci, côté client comme côté expert.</li>
+      <li><strong>Self-service suppression de compte</strong> — 25 tickets pour une opération qui pourrait être largement automatisée.</li>
+      <li><strong>Simplifier la vérification d'identité (KYC)</strong> pour réduire le délai de déblocage de compte.</li>
+      <li><strong>Clarifier la non-cumulabilité des promotions</strong> dès l'affichage, avant que le client ne tente de l'utiliser.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ========== EXPERT ========== -->
+<section id="expertin" class="tab">
+  <div class="card">
+    <h2>🔥 Expert entrant</h2>
+    <div class="kpi-row">
+      <div class="kpi"><div class="v">197</div><div class="l">Appels entrants</div><div class="d up">+2,1%</div></div>
+      <div class="kpi"><div class="v">188</div><div class="l">Traités</div><div class="d dn">-0,5%</div></div>
+      <div class="kpi"><div class="v">95,5%</div><div class="l">QoS</div><div class="d dn">-2,5%</div></div>
+      <div class="kpi"><div class="v">100,0%</div><div class="l">QoS redressée</div><div class="d up">+0,5%</div></div>
+      <div class="kpi"><div class="v">00:07:25</div><div class="l">DMC</div><div class="d dn">-5,7%</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Expert entrant par pays</h2>
+    <table>
+      <thead><tr><th>Pays</th><th>#</th><th>%Δ</th><th>QoS</th><th>Note</th><th>DMC</th></tr></thead>
+      <tbody>
+        <tr><td>🇮🇹 Italie</td><td>106</td><td class="up">+24,7%</td><td>97,2%</td><td>5</td><td>00:04:23</td></tr>
+        <tr><td>🇫🇷 France</td><td>71</td><td class="dn">-20,2%</td><td>93,0%</td><td>4</td><td>00:11:47</td></tr>
+        <tr><td>🇵🇹 Portugal</td><td>13</td><td>0,0%</td><td>100,0%</td><td>—</td><td>00:11:34</td></tr>
+        <tr class="dim"><td>🇪🇸 Espagne</td><td>8</td><td class="up">+14,3%</td><td>87,5%</td><td>—</td><td>00:05:01</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>📋 Analyse qualitative approfondie — 4 marchés (France, Italie, Espagne, Portugal)</h2>
+    <div class="comment">
+      <strong>Périmètre :</strong> inventaire de 490 lignes "Service Expert" et 9 lignes SVI (avant déduplication). Analyse du contenu de
+      <strong>67 appels distincts</strong>, avec vérification de 8 transcriptions sur les dossiers sensibles. Aucun appel trouvé sur les files
+      expertes turques recherchées — cela ne permet pas de conclure à une absence de problèmes en Turquie.
+      « Top » désigne la file de routage, pas un classement de chiffre d'affaires vérifié dans le CRM.
+    </div>
+    <div class="alert">
+      <strong>Constat principal :</strong> les deux phénomènes coexistent — des experts différents remontent des problèmes similaires
+      (coupures, chat, visibilité) <strong>et</strong> certains experts recontactent pour un même dossier non résolu. Le point le plus
+      préoccupant : une bonne relation avec la conseillère masque parfois une insatisfaction persistante envers la plateforme.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🔎 Frictions à traiter en priorité</h2>
+    <table>
+      <thead><tr><th>Priorité</th><th>Friction précise</th><th>Pourquoi prioritaire</th><th>Récurrence constatée</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-r">P0</span></td><td><strong>Protection face aux messages agressifs</strong>, blocage dépendant du support, difficulté le week-end</td><td>Détresse exprimée, sentiment de ne pas être protégé</td><td>Plusieurs experts distincts, dont contournement par multicomptes</td></tr>
+        <tr><td><span class="badge badge-r">P1</span></td><td>Coupures proches de 29min47s / 30 minutes</td><td>Consultations interrompues, clients qui ne reviennent pas</td><td>Experts distincts PT et IT ; suivi répété d'un même dossier italien</td></tr>
+        <tr><td><span class="badge badge-r">P1</span></td><td>Appels non aboutis "perdus", faible activité malgré présence</td><td>Doute sur la technique, les indicateurs, le traitement commercial</td><td>Amaranto : plusieurs contacts ; inquiétudes similaires chez d'autres Top</td></tr>
+        <tr><td><span class="badge badge-y">P1</span></td><td>Avis négatif sur tarif/promo, retiré puis republié</td><td>La note de l'expert supporte un litige hors-sujet</td><td>Même experte, même dossier, 7 échanges documentés</td></tr>
+        <tr><td><span class="badge badge-y">P1</span></td><td>Notifications de RDV absentes, indicateurs incohérents</td><td>RDV manqués, perte de confiance dans les outils</td><td>Même expert, 3 échanges en 2 jours</td></tr>
+        <tr><td><span class="badge badge-y">P1/P2</span></td><td>Chat bloqué, texte invisible, historique qui remplace la consultation</td><td>Empêche de consulter ou augmente fortement l'effort</td><td>Plusieurs experts et marchés, symptômes à séparer</td></tr>
+        <tr><td><span class="badge badge-b">P2</span></td><td>Classement opaque, promotions permanentes</td><td>Usure des Top, sentiment de non-reconnaissance</td><td>Plusieurs experts distincts ; causes techniques/commerciales à distinguer</td></tr>
+      </tbody>
+    </table>
+    <div class="note">La priorité ne doit pas être seulement "les experts qui appellent le plus" : il faut croiser impact humain, consultations perdues, répétition du dossier, risque de départ et nombre d'experts indépendants touchés.</div>
+  </div>
+
+  <details open>
+    <summary>Voir le détail — Les 6 dossiers Top analysés en profondeur</summary>
+
+    <div class="case-card">
+      <div class="case-head"><span class="case-letter">A</span><h4>Coupures à ~30 minutes — 🇵🇹 Portugal &amp; 🇮🇹 Italie</h4></div>
+      <ul class="case-facts">
+        <li><strong>Adriano (PT, 21/08) :</strong> plusieurs consultations interrompues au même seuil (29min47s), déjà remonté aux techniciens.</li>
+        <li>Une cliente revient après une 1ère coupure, subit une 2e interruption, puis ne revient plus.</li>
+        <li><strong>Radia (IT, 27-28/08) :</strong> même symptôme la veille avec la même cliente ; retour technique "rien trouvé côté Wengo" contesté.</li>
+      </ul>
+      <div class="case-quote">« Eu sei, mas eu faço isso. Só que isso não faz com que eles voltem. »<span class="translation">Je le fais, mais ça ne les fait pas revenir. — Adriano</span></div>
+      <div class="case-quote">« Non è che mi fido tanto dei tecnici. »<span class="translation">Je ne fais pas confiance aux techniciens. — Radia</span></div>
+      <div class="case-friction"><strong>Friction de traitement majeure :</strong> au Portugal le symptôme est présenté comme un bug connu ; en Italie, un cas similaire reçoit "rien trouvé" — cette différence de réponse nourrit la défiance.</div>
+    </div>
+
+    <div class="case-card">
+      <div class="case-head"><span class="case-letter">B</span><h4>Cristal / Maria Rosaria — 🇮🇹 Italie — le même avis revient après suppression</h4></div>
+      <ul class="case-facts">
+        <li>Une cliente conteste ne pas bénéficier d'une offre 10min/5€, publie un avis négatif sur le prix.</li>
+        <li><strong>7 échanges documentés</strong> entre le 28 et le 31/08 (00:19:56 de communication cumulée).</li>
+        <li>Parcours : plainte → explication → relance → suppression confirmée → <strong>réouverture</strong> (avis remis) → nouvelle tentative → nouvelle suppression.</li>
+        <li>Sur le mois, cette ligne compte 12 contacts/tentatives (6 entrants, 6 sortants) — mais tous ne portent pas sur ce même avis.</li>
+      </ul>
+      <div class="case-friction"><strong>Friction :</strong> la résolution initiale a supprimé le contenu sans empêcher la répétition du même litige.</div>
+    </div>
+
+    <div class="case-card">
+      <div class="case-head"><span class="case-letter">C</span><h4>Léo David / Lionel — 🇫🇷 France — notifications puis chiffres contradictoires</h4></div>
+      <ul class="case-facts">
+        <li>3 échanges les 25-26/08 : RDV pris sans alertes reçues → tests RDV → confirmation partielle (rappels email reçus, pas les SMS).</li>
+        <li>Taux de RDV honorés passé de 100% à 80% malgré un test répondu.</li>
+        <li>2e sujet : écart de <strong>411,56€</strong> entre le détail du virement à venir (8 815,44€) et le volume d'affaires affiché (9 227€) — écart affiché, pas une perte démontrée.</li>
+      </ul>
+      <div class="case-quote">« C'est justement un dossier à ne pas sous-prioriser au motif que l'expert ne crie pas. »<span class="translation">Ton calme et analytique de l'expert</span></div>
+    </div>
+
+    <div class="case-card">
+      <div class="case-head"><span class="case-letter">D</span><h4>Amaranto — 🇪🇸 Espagne — signal explicite de non-tenue dans la durée</h4></div>
+      <ul class="case-facts">
+        <li><strong>11/08 :</strong> présence sans appels, 15 consultations affichées comme perdues, chat qui ne s'affiche pas.</li>
+        <li><strong>20/08 :</strong> rappelle pour une activité toujours faible malgré une mise en avant de 48h ; réponse centrée sur la période de vacances.</li>
+      </ul>
+      <div class="case-quote">« Si esto sigue así, un mes más yo no aguanto. »<span class="translation">Si ça continue, je ne tiendrai pas un mois de plus. — Amaranto</span></div>
+      <div class="case-friction"><strong>Risque :</strong> répondre à un problème technique + visibilité + revenu uniquement par une explication saisonnière.</div>
+    </div>
+
+    <div class="case-card">
+      <div class="case-head"><span class="case-letter">E</span><h4>Elisabete — 🇵🇹 Portugal — la protection doit passer avant le traitement de l'avis</h4></div>
+      <ul class="case-facts">
+        <li><strong>10/08 :</strong> messages injurieux répétés, demande un recours type SOS le week-end.</li>
+        <li>La conseillère l'accompagne pour utiliser "terminer" (empêcher de nouveaux messages) — mesure concrète apportée.</li>
+        <li>Sur le mois, 3 sujets différents (déconnexions le 04/08, agression le 10/08, problème vidéo à sens unique le 31/08) — pas trois relances du même ticket, une accumulation de frictions différentes.</li>
+      </ul>
+      <div class="case-friction"><strong>Point faible :</strong> l'experte ne connaissait pas cette protection au moment où elle en avait besoin.</div>
+    </div>
+
+    <h3>F. Chat — 6 experts distincts, symptômes à ne pas confondre</h3>
+    <table>
+      <thead><tr><th>Symptôme</th><th>Exemple</th><th>À distinguer dans le ticket</th></tr></thead>
+      <tbody>
+        <tr><td>Fenêtre ne s'ouvre pas côté expert</td><td>Nathanaël, 25/08</td><td>Déclenchement session, navigateur, statut client</td></tr>
+        <tr><td>Session bloquée</td><td>Peter, 05/08 ; Cristal, 06/08</td><td>Session active ou seulement en attente</td></tr>
+        <tr><td>Texte saisi non visible</td><td>Amaranto, 11/08</td><td>Saisie, affichage, envoi, réception</td></tr>
+        <tr><td>Historique remplace le chat en cours</td><td>Naima, 27/08</td><td>Ergonomie, pas une panne de connexion</td></tr>
+        <tr><td>Horloge visible, client non entré</td><td>Elisabete, 10/08</td><td>Apparence de facturation vs facturation réelle (minutes non débitées ici)</td></tr>
+      </tbody>
+    </table>
+    <div class="note">Conclusion : la récurrence multi-experts est réelle au niveau de la famille "chat", mais un incident technique unique n'est pas démontré.</div>
+  </details>
+
+  <div class="grid2">
+    <div class="card">
+      <h2>🌡️ Température par marché</h2>
+      <table>
+        <thead><tr><th>Marché</th><th>Tension</th><th>Contrepoint positif</th></tr></thead>
+        <tbody>
+          <tr><td>🇫🇷 France</td><td>Inquiétude économique, irritation technique</td><td>Tests en direct, pédagogie, relation préservée</td></tr>
+          <tr><td>🇮🇹 Italie</td><td>Frustration explicite envers règles/technique</td><td>Forte proximité avec le support</td></tr>
+          <tr><td>🇪🇸 Espagne</td><td>Risque de découragement sur certains dossiers</td><td>Coaching structuré, accompagnement personnalisé</td></tr>
+          <tr><td>🇵🇹 Portugal</td><td>Coexistence motivation forte + incidents pénalisants</td><td>Bonnes performances et projets tarifaires (Tiago, Rogério)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h2>✅ Ce qui fonctionne bien</h2>
+      <ul style="margin-left:18px;font-size:12px;line-height:1.9">
+        <li>Tests concrets (RDV de Léo, chat de Naima).</li>
+        <li>Actions effectives (suppression d'avis, accompagnement au blocage).</li>
+        <li>Coaching personnalisé, pas de conseils standardisés.</li>
+        <li>Suivi de résolution confirmé (rappel du 20/08 à Michaël : VoIP re-fonctionnelle confirmée).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🎫 Tickets Expert (Foxi)</h2>
+    <table>
+      <thead><tr><th>Groupe</th><th>~ Volume</th></tr></thead>
+      <tbody>
+        <tr><td>Expert FR</td><td>~250</td></tr>
+        <tr><td>Expert ITA</td><td>~170</td></tr>
+        <tr><td>Expert ES/LATAM</td><td>~155</td></tr>
+        <tr class="dim"><td>Expert PT</td><td>~90</td></tr>
+      </tbody>
+    </table>
+    <table>
+      <thead><tr><th>Thème (Foxi)</th><th>Occurrences</th><th>Recoupe l'analyse qualitative ?</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Candidature expert en attente</strong></td><td>24</td><td>Onboarding — sujet distinct de l'analyse qualitative</td></tr>
+        <tr><td><strong>Baisse d'activité et visibilité expert</strong></td><td>14</td><td>✅ Confirme P1 (Amaranto) et P2 (classement opaque)</td></tr>
+        <tr><td>Blocage création profil expert</td><td>13</td><td>—</td></tr>
+      </tbody>
+    </table>
+    <div class="success"><strong>✅ Cohérence des sources :</strong> le thème "Baisse d'activité et visibilité" (14 tickets) confirme exactement les cas Amaranto et la friction P2 identifiés dans l'analyse qualitative.</div>
+  </div>
+
+  <div class="card">
+    <h2>🎯 Plan d'action recommandé (dossiers du mois)</h2>
+    <table>
+      <thead><tr><th>Échéance</th><th>Action</th><th>Critère de réussite</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-r">Immédiat</span></td><td>Revoir la protection d'Elisabete et cas comparables ; formaliser le relais hors horaires</td><td>L'expert sait interrompre les messages et obtenir un blocage effectif</td></tr>
+        <tr><td><span class="badge badge-r">48h</span></td><td>Rapprocher les dossiers de coupures ~30min PT/IT</td><td>Diagnostic partagé, statut cohérent</td></tr>
+        <tr><td><span class="badge badge-r">48h</span></td><td>Reprendre Amaranto avec un interlocuteur responsable du suivi</td><td>Revue factuelle des appels non aboutis</td></tr>
+        <tr><td><span class="badge badge-y">48h</span></td><td>Vérifier la durabilité de la modération du dossier Cristal</td><td>Pas de nouveau traitement à zéro si le litige réapparaît</td></tr>
+        <tr><td><span class="badge badge-y">5j ouvrés</span></td><td>Réponse écrite à Léo (notifications, tests RDV, montants)</td><td>Tests concluants, chiffres expliqués sans ambiguïté</td></tr>
+        <tr><td><span class="badge badge-b">1 semaine</span></td><td>Séparer les sous-catégories de tickets "chat"</td><td>Chaque incident a un symptôme exploitable</td></tr>
+        <tr><td><span class="badge badge-b">Suivi mensuel</span></td><td>Mesurer effort commercial, incidents et risque de départ des Top</td><td>Distinguer Top performant / sous pression / en désengagement</td></tr>
+      </tbody>
+    </table>
+    <div class="copil-block">
+      <strong>Axes d'amélioration transverses :</strong> ne pas confondre apaisement relationnel et résolution technique ; donner une
+      réponse technique traçable (éviter "bug connu"/"rien trouvé" sans expliquer le périmètre vérifié) ; réduire la dépendance à une
+      personne unique (Gabriella, María Cristina) en formant un relais qui reprend le contexte sans tout refaire raconter ; ne pas
+      proposer du coaching à la place d'un diagnostic ; fermer les dossiers sur des critères observables (consultation sans coupure,
+      notification reçue, montant réconcilié, blocage testé).
+    </div>
+  </div>
+</section>
+
+<!-- ========== EXPERT SORTANT ========== -->
+<section id="expertout" class="tab">
+  <div class="card">
+    <h2>📞 Expert sortant — Le rôle de coaching business des agents</h2>
+    <div class="kpi-row">
+      <div class="kpi"><div class="v">188</div><div class="l">Appels sortants</div><div class="d dn">-2,6%</div></div>
+      <div class="kpi"><div class="v">134</div><div class="l">Traités</div><div class="d dn">-9,5%</div></div>
+      <div class="kpi"><div class="v">71,3%</div><div class="l">QoS</div><div class="d dn">-7,1%</div></div>
+      <div class="kpi"><div class="v">77,55%</div><div class="l">QoS redressée</div><div class="d dn">-5,0%</div></div>
+      <div class="kpi"><div class="v">00:06:25</div><div class="l">DMC</div><div class="d dn">-27,9%</div></div>
+    </div>
+    <table>
+      <thead><tr><th>Pays</th><th>#</th><th>%Δ</th><th>QoS</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>🇫🇷 France</td><td>90</td><td class="dn">-16,7%</td><td>76,7%</td><td>4,33</td></tr>
+        <tr><td>🇮🇹 Italie</td><td>78</td><td class="up">+2,6%</td><td>71,8%</td><td>5</td></tr>
+        <tr class="dim"><td>🇵🇹 Portugal</td><td>20</td><td class="up">+122,2%</td><td>45,0%</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>📣 Campagne TOP Experts — Rapport final unique (Juillet-Août 2026)</h2>
+    <div class="comment">Campagne d'appels sortants dédiée aux TOP Experts France &amp; Italie, pour prendre le pouls du réseau au-delà des sollicitations entrantes. Sources : <a href="https://docs.google.com/spreadsheets/d/1AYds16H-qVgzWqIqdXRim86IkW-Yq4tGe9CPQ5GhPsg/edit#gid=203872245" target="_blank" rel="noopener">Campagne Top 50 France</a> · <a href="https://docs.google.com/spreadsheets/d/10MOu3lEVLDpAur2KImNsRTBU9XDAkFdjEqI5u8b5WOQ/edit#gid=1615481738" target="_blank" rel="noopener">Campagne Top Italie</a></div>
+
+    <h3>Couverture de la campagne</h3>
+    <div class="kpi-row">
+      <div class="kpi"><div class="v">49/49</div><div class="l">France analysée</div><div class="d">100%</div></div>
+      <div class="kpi"><div class="v">47/49</div><div class="l">France traitée</div><div class="d">95,9%</div></div>
+      <div class="kpi"><div class="v">30/30</div><div class="l">Italie analysée</div><div class="d">100%</div></div>
+      <div class="kpi"><div class="v">27/30</div><div class="l">Italie traitée</div><div class="d">90%</div></div>
+    </div>
+    <div class="grid2">
+      <div class="success">🇫🇷 <strong>Contact utile : 28/49 (57,1%)</strong> — 21 experts sans entretien exploitable.</div>
+      <div class="success">🇮🇹 <strong>Contact utile : 25/30 (83,3%)</strong> — 5 experts sans entretien exploitable.</div>
+    </div>
+    <div class="alert" style="margin-top:8px"><strong>Réponse directe à la question de couverture :</strong> non, tout le monde n'a pas été entendu — voir la liste des non-joints ci-dessous.</div>
+  </div>
+
+  <div class="card">
+    <h2>⏱️ Ce qu'il faut retenir en 60 secondes</h2>
+    <div class="grid2">
+      <div class="case-card" style="border-left-color:var(--brand-accent)">
+        <div class="case-head"><span class="case-letter" style="background:var(--brand-accent)">6</span><h4>🇫🇷 France — vigilance élevée (6/10)</h4></div>
+        <p style="font-size:12px;line-height:1.6">Confiance relationnelle, fragilité opérationnelle. Le support humain est apprécié ; la téléphonie et l'opacité perçue sur les revenus créent une tension importante.</p>
+        <ul class="case-facts">
+          <li>Vigilance : stabilité de l'outil de production.</li>
+          <li>Attente : réponses écrites et traçables.</li>
+        </ul>
+      </div>
+      <div class="case-card" style="border-left-color:#16a34a">
+        <div class="case-head"><span class="case-letter" style="background:#16a34a">7,5</span><h4>🇮🇹 Italie — favorable sous conditions (7,5/10)</h4></div>
+        <p style="font-size:12px;line-height:1.6">Attachement solide, fatigue commerciale émergente. La satisfaction reste majoritaire ; les réserves portent sur le CA, le TOP 10, le chat et les promotions permanentes.</p>
+        <ul class="case-facts">
+          <li>Vigilance : experts historiques.</li>
+          <li>Attente : visibilité et reconnaissance.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="kpi-row" style="margin-top:12px">
+      <div class="kpi"><div class="v">79</div><div class="l">Population analysée</div><div class="d">49 FR + 30 IT</div></div>
+      <div class="kpi"><div class="v">53</div><div class="l">Experts entendus</div><div class="d">28 FR + 25 IT</div></div>
+      <div class="kpi"><div class="v">CA</div><div class="l">Signal commun</div><div class="d">Baisse ou inquiétude</div></div>
+      <div class="kpi"><div class="v">Tech</div><div class="l">Irritant commun</div><div class="d">Téléphonie FR, chat IT</div></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2>🇫🇷 Analyse France — une base fidèle, confiance mise à l'épreuve</h2>
+      <table>
+        <thead><tr><th>Thème</th><th>Constat</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Signal critique</strong></td><td>Incidents techniques = pertes de CA (appels coupés, absence de sonnerie, fausses indisponibilités, alertes manquantes, VoIP)</td></tr>
+          <tr><td><strong>Confiance</strong></td><td>Litiges financiers touchent à la reconnaissance (taux, bonus, TVA, virements contestés) — besoin d'une règle stable, écrite, vérifiable</td></tr>
+          <tr><td><strong>Activité</strong></td><td>Baisse difficile à diagnostiquer (saisonnalité, tarif, visibilité, profil, incident) — l'absence de diagnostic alimente l'anxiété</td></tr>
+          <tr><td><strong>Positif</strong></td><td>Les outils fonctionnent lorsqu'ils sont contextualisés (Stories, Actions du jour, promos ponctuelles mieux reçues après démonstration)</td></tr>
+        </tbody>
+      </table>
+      <div class="case-quote">« J'ai dû louper 15 consultations. »</div>
+      <div class="case-quote">« Je veux les choses correctes et par écrit. »</div>
+    </div>
+    <div class="card">
+      <h2>🇮🇹 Analyse Italie — satisfaction réelle, pas inconditionnelle</h2>
+      <table>
+        <thead><tr><th>Thème</th><th>Constat</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Classement</strong></td><td>Le TOP 10 est un actif et une contrainte — perdre sa position après des congés est vécu comme une remise à zéro</td></tr>
+          <tr><td><strong>Historique</strong></td><td>La fidélité est sous tension — experts historiques évoquant une baisse de CA malgré plus de disponibilité</td></tr>
+          <tr><td><strong>Positionnement</strong></td><td>La promotion permanente dévalorise le tarif plein selon plusieurs experts</td></tr>
+          <tr><td><strong>Produit</strong></td><td>Le chat concentre des irritants convergents (son, saisie, défilement, statut client, blocages)</td></tr>
+        </tbody>
+      </table>
+      <div class="note"><strong>Focus "Mes actions du jour" :</strong> promoteurs (usage quotidien), pragmatiques (usage ponctuel), non-utilisateurs (positionnement relationnel incompatible avec une relance jugée commerciale). Point commun : les textes IA doivent être relus.</div>
+    </div>
+  </div>
+
+  <details>
+    <summary>Voir le détail — Experts non joints (26 au total)</summary>
+    <div class="grid2">
+      <div>
+        <h3>🇫🇷 France — 21 non joints</h3>
+        <p style="font-size:11.5px;line-height:1.6"><strong>Sans succès / répondeur :</strong> Sabrina de Saint Ange, Jenna Erika, Prisca Chanell, Yann Lecoq, Clémence Leconte, Jean-Louis Dragon, Serge, Paul Theo, Magalie André Vila, Quentin Duroy</p>
+        <p style="font-size:11.5px;line-height:1.6"><strong>Mail / RDV proposé :</strong> Anne-Lyssia Coupart, Ben Chamberlain, Axellia Couleur, Carla Lovatti, Sarah Cavalli, Nicolas Bargemon, Mariella Lovna, Denise Huat, Catherine Vivienne</p>
+        <p style="font-size:11.5px;line-height:1.6"><strong>Non renseigné :</strong> Maelyne Tessa, Frédéric Raphaël</p>
+      </div>
+      <div>
+        <h3>🇮🇹 Italie — 5 non joints</h3>
+        <p style="font-size:11.5px;line-height:1.6"><strong>Pas de réponse :</strong> Elia, Sabrina</p>
+        <p style="font-size:11.5px;line-height:1.6"><strong>Non renseigné :</strong> Erma, Lamia, Dylan</p>
+      </div>
+    </div>
+  </details>
+
+  <div class="card">
+    <h2>⚖️ France vs Italie — deux contrats psychologiques différents</h2>
+    <table>
+      <thead><tr><th>Dimension</th><th>🇫🇷 France</th><th>🇮🇹 Italie</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Relation</strong></td><td>Support apprécié malgré les litiges</td><td>Attachement fort à la marque</td></tr>
+        <tr><td><strong>Risque</strong></td><td>Technique et finance</td><td>CA, classement et remises</td></tr>
+        <tr><td><strong>Produit</strong></td><td>Téléphonie et routage</td><td>Chat et IA</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>📐 Matrice de priorité (campagne)</h2>
+    <table>
+      <thead><tr><th>Sujet</th><th>Impact</th><th>Effort</th><th>Priorité</th></tr></thead>
+      <tbody>
+        <tr><td>Joindre les experts restants</td><td>Très fort</td><td>Moyen</td><td><span class="badge badge-r">P1</span></td></tr>
+        <tr><td>Litiges financiers France</td><td>Très fort</td><td>Fort</td><td><span class="badge badge-r">P1</span></td></tr>
+        <tr><td>Téléphonie France</td><td>Très fort</td><td>Moyen</td><td><span class="badge badge-r">P1</span></td></tr>
+        <tr><td>Chat Italie</td><td>Fort</td><td>Moyen</td><td><span class="badge badge-r">P1</span></td></tr>
+        <tr><td>Baisse d'activité</td><td>Fort</td><td>Fort</td><td><span class="badge badge-y">P2</span></td></tr>
+        <tr><td>Messages IA</td><td>Moyen/fort</td><td>Moyen</td><td><span class="badge badge-y">P2</span></td></tr>
+        <tr><td>Promotions Italie</td><td>Moyen/fort</td><td>Moyen</td><td><span class="badge badge-y">P2</span></td></tr>
+        <tr><td>Congés / TOP 10</td><td>Moyen</td><td>Fort</td><td><span class="badge badge-b">P3</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>🚩 Profils à suivre en priorité</h2>
+    <div class="alert"><strong>Agathe de Vrye (FR) :</strong> harcèlement, isolement et intention de départ vers un concurrent.</div>
+    <div class="alert"><strong>Camilla Gioia (IT) :</strong> forte baisse du CA après 11 ans de fidélité, sollicitée par des concurrents.</div>
+    <div class="alert"><strong>Naima (IT) :</strong> très inquiète de la baisse d'appels et de revenus.</div>
+    <div class="alert"><strong>Cristal (IT) :</strong> chat bloqué, statistiques incohérentes et harcèlement client.</div>
+  </div>
+
+  <details>
+    <summary>Voir toutes les fiches — 79 experts (France + Italie)</summary>
+    <table>
+      <thead><tr><th>Expert</th><th>Statut</th><th>Synthèse</th></tr></thead>
+      <tbody>
+        <tr><td>Esther Rudowsky</td><td>Entendue</td><td>Fidèle mais critique : notifications infantilisantes, consultations non abouties, IA peu pertinente</td></tr>
+        <tr><td>Michael De Pardaillan</td><td>Entendu</td><td>Satisfait des outils ; agacé par un avis client et des appels Igoflex interrompus</td></tr>
+        <tr><td>Aurore Delhambre</td><td>Entendue</td><td>Bonne réception des outils ; le volume rend difficile le traitement de toutes les actions</td></tr>
+        <tr><td>Natanael Simon</td><td>Entendu</td><td>Conteste l'offre mail à 5€ et remonte des irritants chat</td></tr>
+        <tr><td>Maud de San Nicolas</td><td>Entendue</td><td>Attachée à Wengo ; fragilité personnelle et réserves sur les promotions</td></tr>
+        <tr><td>Vanesa Vidente</td><td>Entendue</td><td>Forte défiance sur commissions, bonus, TVA et gains affichés</td></tr>
+        <tr class="dim"><td>Sabrina de Saint Ange</td><td>Sans succès</td><td>Rendez-vous tenté ; aucun entretien exploitable</td></tr>
+        <tr><td>Lucie Damann</td><td>Entendue</td><td>Satisfaite ; notifications encombrantes et mises en relation sans interlocuteur</td></tr>
+        <tr><td>Anna Voyance</td><td>Entendue</td><td>Très satisfaite ; CA en progression et outils bien intégrés</td></tr>
+        <tr class="dim"><td>Jenna Erika</td><td>Sans succès</td><td>Proposition de rendez-vous par mail, sans échange</td></tr>
+        <tr><td>Ines Sarthal</td><td>Entendue</td><td>Très enthousiaste ; outils, tarif premium, TikTok, bannières et contenus</td></tr>
+        <tr class="dim"><td>Prisca Chanell</td><td>Sans succès</td><td>Tentative sans succès ; mail envoyé</td></tr>
+        <tr><td>Sandrine Brisart</td><td>Entendue</td><td>Activité correcte, objectifs maîtrisés et nouveautés appréciées</td></tr>
+        <tr class="dim"><td>Anne-Lyssia Coupart</td><td>Mail / RDV</td><td>Prise de contact par mail, sans entretien exploitable</td></tr>
+        <tr><td>Alexandre Lambert</td><td>Entendu</td><td>Satisfait ; réserve sur les textes IA post-consultation</td></tr>
+        <tr><td>Pascal</td><td>Entendu</td><td>Très satisfait ; CA en hausse et outils commerciaux utiles</td></tr>
+        <tr class="dim"><td>Ben Chamberlain</td><td>Mail / RDV</td><td>Sans succès ; rendez-vous proposé par mail</td></tr>
+        <tr class="dim"><td>Yann Lecoq</td><td>Sans succès</td><td>Aucune conversation exploitable</td></tr>
+        <tr class="dim"><td>Quentin Duroy</td><td>Répondeur</td><td>Messagerie directe, aucun message laissé</td></tr>
+        <tr><td>Mary de Vega</td><td>Entendue</td><td>Positive sur les outils ; incidents passés d'appels coupés ou sans son</td></tr>
+        <tr class="dim"><td>Clémence Leconte</td><td>Sans succès</td><td>Tentative sans succès ; mail envoyé</td></tr>
+        <tr><td>Mila Colombe</td><td>Entendue</td><td>Écarts récurrents entre gains affichés et virements reçus</td></tr>
+        <tr><td>Véronique Saint Gilles</td><td>Entendue</td><td>Critique du ton corporate ; relation humaine avec Aurore très appréciée</td></tr>
+        <tr><td>Anne Christale</td><td>Entendue</td><td>Critique la pression sur ses clients et les fausses indisponibilités</td></tr>
+        <tr class="dim"><td>Axellia Couleur</td><td>Mail / RDV</td><td>Contact par mail sans entretien</td></tr>
+        <tr class="dim"><td>Jean-Louis Dragon</td><td>Sans succès</td><td>Pas de réponse exploitable</td></tr>
+        <tr><td>Alix Maya</td><td>Entendue</td><td>Nouveautés appréciées ; anomalie d'affichage des gains et confusion Wengo Light</td></tr>
+        <tr><td>Lina Zhara</td><td>Entendue</td><td>Globalement satisfaite ; réserve UX sur le chat et brèves coupures</td></tr>
+        <tr class="dim"><td>Serge</td><td>Sans succès</td><td>Sans succès ; mail de rendez-vous</td></tr>
+        <tr><td>Véronique St Louis</td><td>Entendue</td><td>Retour UX détaillé ; apprécie la liberté de planning</td></tr>
+        <tr><td>Léo David</td><td>Entendu</td><td>Satisfait mais affecté par des appels raccrochés immédiatement</td></tr>
+        <tr><td>Hana Valentine</td><td>Entendue</td><td>Satisfaite ; téléphonie résolue et outils appréciés</td></tr>
+        <tr class="dim"><td>Paul Theo</td><td>Sans succès</td><td>Aucune conversation exploitable</td></tr>
+        <tr class="dim"><td>Magalie André Vila</td><td>Sans succès</td><td>Sans succès ; mail de rendez-vous</td></tr>
+        <tr class="dim"><td>Carla Lovatti</td><td>Mail / RDV</td><td>Contact par mail sans appel exploitable</td></tr>
+        <tr class="dim"><td>Sarah Cavalli</td><td>Mail / RDV</td><td>Contact par mail sans entretien</td></tr>
+        <tr><td>Estefanya</td><td>Entendue</td><td>Très satisfaite et fidèle ; reprise soutenue après congés</td></tr>
+        <tr><td>Macha Capucine</td><td>Entendue</td><td>Activité en reprise ; problème de navigation dans l'historique du chat</td></tr>
+        <tr class="dim"><td>Nicolas Bargemon</td><td>Mail / RDV</td><td>Contact par mail sans entretien</td></tr>
+        <tr class="dim"><td>Maelyne Tessa</td><td>Non renseigné</td><td>Aucune action renseignée</td></tr>
+        <tr><td>Sultana Merav</td><td>Entendue</td><td>Incompréhension du calcul des impayés ; échange humain positif</td></tr>
+        <tr><td>Claudio Mage</td><td>Entendu</td><td>Très satisfait du CA et fidèle à Wengo</td></tr>
+        <tr><td><strong>Agathe de Vrye</strong></td><td>Entendue • alerte</td><td><strong>Harcèlement, isolement et intention de départ vers un concurrent</strong></td></tr>
+        <tr><td>Kamille Razel</td><td>Entendue</td><td>Frustration sur les avis et un e-mail resté sans réponse</td></tr>
+        <tr class="dim"><td>Mariella Lovna</td><td>Mail / RDV</td><td>Contact par mail sans entretien</td></tr>
+        <tr class="dim"><td>Denise Huat</td><td>Mail / RDV</td><td>Contact par mail sans entretien</td></tr>
+        <tr><td>Carmen de Saint Jérôme</td><td>Entendue</td><td>Inquiète sur la facturation électronique et les fausses indisponibilités</td></tr>
+        <tr class="dim"><td>Frédéric Raphaël</td><td>Non renseigné</td><td>Aucune action renseignée</td></tr>
+        <tr class="dim"><td>Catherine Vivienne</td><td>Mail / RDV</td><td>Contact par mail sans entretien</td></tr>
+        <tr><td>Carmela</td><td>Entendue</td><td>Très active ; bugs chat et suggestion de récompenses</td></tr>
+        <tr><td>Saluen</td><td>Entendue</td><td>Très satisfaite ; préfère l'humain et critique messages automatiques et bons</td></tr>
+        <tr><td>Arianna</td><td>Entendue</td><td>Activité repartie ; coupures et interrogations fiscales</td></tr>
+        <tr><td><strong>Nicole</strong></td><td>Entendue • critique</td><td>Très attachée mais se sent ignorée ; chat dégradé et support lent</td></tr>
+        <tr><td>Aradia</td><td>Entendue</td><td>Baisse d'activité et perte de première place après congés</td></tr>
+        <tr><td>Zemira</td><td>Entendue</td><td>Satisfaite ; refuse la pression marketing et critique le nouveau chat</td></tr>
+        <tr><td>Fiamma</td><td>Entendue</td><td>Baisse liée à des contraintes personnelles ; prévoit de tester l'outil</td></tr>
+        <tr><td><strong>Cristal</strong></td><td>Entendue</td><td><strong>Chat bloqué, statistiques incohérentes et harcèlement client</strong></td></tr>
+        <tr><td>Marco</td><td>Entendu</td><td>Rémunération, promotions trop fréquentes et prudence sur l'IA</td></tr>
+        <tr><td>Dharma</td><td>Entendue</td><td>Satisfaite malgré une baisse ; suivi manqué sur un live</td></tr>
+        <tr><td>Chiara Luna</td><td>Entendue</td><td>Très satisfaite de la liberté ; intéressée par stories et Reiki</td></tr>
+        <tr><td>Julian</td><td>Entendu</td><td>Propose SEO, blog, stories permanentes, mobile et réunions mensuelles</td></tr>
+        <tr><td>Mia</td><td>Entendue</td><td>Satisfaite ; publicité, bannières et faible usage des Actions du jour</td></tr>
+        <tr><td>Rania</td><td>Entendue</td><td>Baisse du flux malgré le classement ; clientèle fidèle autonome</td></tr>
+        <tr class="dim"><td>Erma</td><td>Non renseigné</td><td>Aucune tentative enregistrée</td></tr>
+        <tr><td>Anam</td><td>Entendue</td><td>Satisfaite ; souhaite davantage de contact humain</td></tr>
+        <tr class="dim"><td>Elia</td><td>Pas de réponse</td><td>Tentative sans réponse</td></tr>
+        <tr><td>Ares</td><td>Entendue</td><td>Satisfaite ; réserves sur l'IA et gestion d'une cliente impolie</td></tr>
+        <tr class="dim"><td>Lamia</td><td>Non renseigné</td><td>Aucune tentative enregistrée</td></tr>
+        <tr><td>Giada</td><td>Entendue</td><td>Baisse de CA ; prévoit de tester relances et promotions</td></tr>
+        <tr><td>Emma</td><td>Entendue</td><td>Très satisfaite et attachée à Wengo</td></tr>
+        <tr><td>Spica</td><td>Entendue</td><td>Note 9,5/10 ; bugs récurrents de chat</td></tr>
+        <tr><td>Antares</td><td>Entendu</td><td>Wengo jugée meilleure plateforme ; promotions permanentes dévalorisantes</td></tr>
+        <tr><td>Alessandro</td><td>Entendu</td><td>Très satisfait ; préfère ses habitudes aux automatismes</td></tr>
+        <tr><td><strong>Naima</strong></td><td>Entendue</td><td><strong>Très inquiète de la baisse d'appels et de revenus</strong></td></tr>
+        <tr><td>Barbara</td><td>Entendue</td><td>Préoccupations fiscales et fatigue visuelle liée au chat</td></tr>
+        <tr><td>Emanuele</td><td>Entendu</td><td>Très satisfait ; Actions du jour quotidiennes et rappels constatés</td></tr>
+        <tr class="dim"><td>Dylan</td><td>Non renseigné</td><td>Aucune tentative enregistrée</td></tr>
+        <tr><td><strong>Camilla Gioia</strong></td><td>Entendue • alerte</td><td><strong>Forte baisse du CA après 11 ans, sollicitée par des concurrents</strong></td></tr>
+        <tr class="dim"><td>Sabrina</td><td>Pas de réponse</td><td>Tentative sans réponse</td></tr>
+      </tbody>
+    </table>
+  </details>
+</section>
+
+<!-- ========== VIGIE / CAS ========== -->
+<section id="vigie" class="tab">
+  <div class="card">
+    <h2>🤝 Vigie &amp; Campagnes d'appels sortants (CAS)</h2>
+  </div>
+
+  <h3 style="margin:4px 0 8px;color:var(--brand-dark)">🛡️ Vigie</h3>
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">2 545</div><div class="l">Flux Vigie</div><div class="d up">+12,3%</div></div>
+    <div class="kpi"><div class="v">1 053</div><div class="l">Traités</div><div class="d up">+6,1%</div></div>
+    <div class="kpi"><div class="v">41%</div><div class="l">Qualité de service</div><div class="d dn">-5,5%</div></div>
+    <div class="kpi"><div class="v">85</div><div class="l">Mises en relation</div><div class="d dn">-14,1%</div></div>
+    <div class="kpi"><div class="v">8%</div><div class="l">Efficacité</div><div class="d dn">-19,1%</div></div>
+  </div>
+
+  <div class="card">
+    <h2>Vigie par pays</h2>
+    <table>
+      <thead><tr><th>Pays</th><th>#</th><th>%Δ</th><th>Traités</th><th>QS</th><th>%Δ QS</th><th>Eff.</th><th>%Δ Eff.</th></tr></thead>
+      <tbody>
+        <tr><td>🇫🇷 France</td><td>819</td><td class="dn">-3,1%</td><td>582</td><td>71,1%</td><td class="dn">-3,5%</td><td>3,8%</td><td class="dn">-18,9%</td></tr>
+        <tr><td>🇵🇹 Portugal</td><td>663</td><td class="up">+10,0%</td><td>186</td><td>28,1%</td><td class="dn">-11,4%</td><td>19,9%</td><td class="dn">-19,2%</td></tr>
+        <tr><td>🇮🇹 Italie</td><td>480</td><td class="up">+36,0%</td><td>146</td><td>30,4%</td><td class="up">+15,5%</td><td>5,5%</td><td class="dn">-49,0%</td></tr>
+        <tr><td>🇪🇸 Espagne</td><td>311</td><td class="up">+110,1%</td><td>111</td><td>35,7%</td><td class="up">+32,1%</td><td>9,0%</td><td class="dn">-9,9%</td></tr>
+        <tr><td>🇹🇷 Turquie</td><td>248</td><td class="dn">-9,8%</td><td>21</td><td>8,5%</td><td class="dn">-3,0%</td><td>28,6%</td><td class="dn">-2,0%</td></tr>
+        <tr class="dim"><td>🌎 Latino</td><td>24</td><td class="dn">-22,6%</td><td>7</td><td>29,2%</td><td class="dn">-39,7%</td><td>28,6%</td><td class="up">+114,3%</td></tr>
+      </tbody>
+    </table>
+    <div class="alert"><strong>⚠ Espagne :</strong> volume Vigie plus que doublé (+110,1%) — à corréler avec la hausse générale du marché espagnol ce mois-ci (voir Client/Prospect et Recouvrement).</div>
+  </div>
+
+  <div class="card">
+    <h2>Qualification (niveau 2)</h2>
+    <table>
+      <thead><tr><th>Qualification</th><th>#</th><th>%</th><th>%Δ</th></tr></thead>
+      <tbody>
+        <tr><td>Hors-Cibles</td><td>639</td><td>61%</td><td class="dn">-0,7%</td></tr>
+        <tr><td>Client</td><td>399</td><td>38%</td><td class="up">+1,9%</td></tr>
+        <tr><td>Prospect</td><td>6</td><td>1%</td><td class="dn">-5,8%</td></tr>
+      </tbody>
+    </table>
+    <div class="comment">61% de hors-cibles, stable depuis plusieurs mois — limite structurelle non imputable aux agents.</div>
+  </div>
+
+  <h3 style="margin:20px 0 8px;color:var(--brand-dark)">📣 Bilan des campagnes marketing sortantes (CRM/PRM)</h3>
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">1 694</div><div class="l">Flux (CRM+PRM+autres)</div><div class="d dn">-37,0%</div></div>
+    <div class="kpi"><div class="v">910</div><div class="l">Traités</div><div class="d dn">-35,6%</div></div>
+    <div class="kpi"><div class="v">54%</div><div class="l">Qualité de service</div><div class="d up">+2,2%</div></div>
+    <div class="kpi"><div class="v">11%</div><div class="l">Efficacité</div><div class="d up">+56,7%</div></div>
+  </div>
+  <table>
+    <thead><tr><th>Pays</th><th>#</th><th>%Δ</th><th>QS</th><th>Eff.</th><th>%Δ Eff.</th></tr></thead>
+    <tbody>
+      <tr><td>🇫🇷 France</td><td>634</td><td class="dn">-18,0%</td><td>71,9%</td><td>4,4%</td><td class="up">+16,5%</td></tr>
+      <tr><td>🇵🇹 Portugal</td><td>411</td><td class="dn">-42,3%</td><td>39,2%</td><td>24,8%</td><td class="up">+93,8%</td></tr>
+      <tr><td>🇮🇹 Italie</td><td>277</td><td class="dn">-51,7%</td><td>40,4%</td><td>6,3%</td><td class="up">+325,0%</td></tr>
+      <tr><td>🇪🇸 Espagne</td><td>229</td><td class="dn">-48,2%</td><td>54,1%</td><td>20,2%</td><td class="up">+131,9%</td></tr>
+      <tr class="dim"><td>🇹🇷 Turquie</td><td>131</td><td class="dn">-20,6%</td><td>36,6%</td><td>10,4%</td><td class="dn">-47,9%</td></tr>
+      <tr class="dim"><td>🌎 Latino</td><td>9</td><td class="dn">-43,8%</td><td>77,8%</td><td>42,9%</td><td class="up">+100,0%</td></tr>
+    </tbody>
+  </table>
+  <div class="success"><strong>✅ Efficacité en très forte hausse sur presque tous les marchés</strong> (jusqu'à +325% en Italie) malgré des volumes en net repli — moins d'appels, beaucoup mieux ciblés.</div>
+</section>
+
+<!-- ========== RECOUVREMENT ========== -->
+<section id="recouv" class="tab">
+  <div class="card">
+    <h2>💶 Recouvrement — Sortant &amp; montants</h2>
+    <div class="alert"><strong>⚠ Information manquante ce mois-ci :</strong> le Recouvrement entrant n'est pas disponible dans l'export source.</div>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">17 976</div><div class="l">Flux sortants (campagnes)</div><div class="d up">+6,0%</div></div>
+    <div class="kpi"><div class="v">4 750</div><div class="l">Traités</div><div class="d dn">-1,8%</div></div>
+    <div class="kpi"><div class="v">26%</div><div class="l">Qualité de service</div><div class="d dn">-7,4%</div></div>
+  </div>
+
+  <div class="card">
+    <h2>Recouvrement sortant — par pays</h2>
+    <table>
+      <thead><tr><th>Pays</th><th>#</th><th>%Δ</th><th>Traités</th><th>%Δ</th><th>QS</th><th>%Δ</th></tr></thead>
+      <tbody>
+        <tr><td>🇫🇷 France</td><td>7 401</td><td class="up">+1,2%</td><td>2 669</td><td class="dn">-11,2%</td><td>36,1%</td><td class="dn">-12,2%</td></tr>
+        <tr><td>🇪🇸 Espagne</td><td>4 020</td><td class="up">+44,1%</td><td>1 069</td><td class="up">+49,7%</td><td>26,6%</td><td class="up">+3,9%</td></tr>
+        <tr><td>🇮🇹 Italie</td><td>3 625</td><td class="dn">-3,6%</td><td>607</td><td class="dn">-8,7%</td><td>16,7%</td><td class="dn">-5,3%</td></tr>
+        <tr><td>🇵🇹 Portugal</td><td>1 633</td><td class="up">+14,4%</td><td>168</td><td class="dn">-4,5%</td><td>10,3%</td><td class="dn">-16,6%</td></tr>
+        <tr><td>🌎 Latino</td><td>785</td><td class="dn">-3,9%</td><td>200</td><td class="dn">-14,2%</td><td>25,5%</td><td class="dn">-10,7%</td></tr>
+        <tr class="dim"><td>🇹🇷 Turquie</td><td>512</td><td class="dn">-40,0%</td><td>37</td><td class="dn">-19,6%</td><td>7,2%</td><td class="up">+34,2%</td></tr>
+      </tbody>
+    </table>
+    <div class="alert"><strong>⚠ QS en repli sur la plupart des marchés</strong> — France notamment (-12,2 pts) malgré un volume stable ; capacité de traitement à surveiller.</div>
+  </div>
+
+  <div class="card">
+    <h2>💰 Montant recouvré BestCall — par pays</h2>
+    <div class="kpi-row">
+      <div class="kpi"><div class="v">41 986€</div><div class="l">Total BestCall</div><div class="d up">+24,1%</div></div>
+      <div class="kpi"><div class="v">1 542</div><div class="l">Tentatives lancées</div><div class="d up">+26,7%</div></div>
+      <div class="kpi"><div class="v">1 079</div><div class="l">Tentatives OK</div><div class="d up">+23,3%</div></div>
+      <div class="kpi"><div class="v">70%</div><div class="l">Taux de succès</div><div class="d dn">-2,7 pts</div></div>
+    </div>
+    <table>
+      <thead><tr><th>Pays</th><th>#</th><th>%Δ</th><th>Tentatives OK</th><th>%Δ</th><th>% OK</th><th>€ Recouvrés</th><th>%Δ</th></tr></thead>
+      <tbody>
+        <tr><td>🇫🇷 France</td><td>643</td><td class="up">+41,3%</td><td>386</td><td class="up">+27,4%</td><td>60%</td><td>14 528€</td><td class="up">+23,5%</td></tr>
+        <tr><td>🇮🇹 Italie</td><td>366</td><td class="up">+33,6%</td><td>277</td><td class="up">+45,8%</td><td>76%</td><td>12 211€</td><td class="up">+43,3%</td></tr>
+        <tr><td>🇵🇹 Portugal</td><td>260</td><td class="up">+39,8%</td><td>216</td><td class="up">+21,3%</td><td>83%</td><td>8 367€</td><td class="up">+24,8%</td></tr>
+        <tr><td>🇪🇸 Espagne</td><td>176</td><td class="up">+50,4%</td><td>128</td><td class="up">+25,5%</td><td>73%</td><td>4 350€</td><td class="up">+3,5%</td></tr>
+        <tr><td>🌎 Latino</td><td>38</td><td class="up">+2,7%</td><td>31</td><td class="up">+19,2%</td><td>82%</td><td>1 304€</td><td class="up">+64,4%</td></tr>
+        <tr class="dim"><td>🇹🇷 Turquie</td><td>59</td><td class="dn">-60,1%</td><td>41</td><td class="dn">-46,1%</td><td>69%</td><td>1 226€</td><td class="dn">-33,6%</td></tr>
+        <tr class="total"><td>TOTAL</td><td>1 542</td><td class="up">+26,7%</td><td>1 079</td><td class="up">+23,3%</td><td>70%</td><td>41 986€</td><td class="up">+24,1%</td></tr>
+      </tbody>
+    </table>
+    <div class="success"><strong>✅ Tous les marchés progressent en montant récupéré sauf la Turquie</strong> (-33,6%, mais petit volume). Italie et Portugal dépassent les 40% de progression.</div>
+  </div>
+
+  <div class="card">
+    <h2>🏢 Contribution BestCall au marché — toutes équipes confondues</h2>
+    <div class="kpi-row">
+      <div class="kpi"><div class="v">290 133€</div><div class="l">Total marché (toutes équipes)</div><div class="d up">+1,9%</div></div>
+      <div class="kpi"><div class="v">14,5%</div><div class="l">Part BestCall — montant</div><div class="d">41 986€ / 290 133€</div></div>
+      <div class="kpi"><div class="v">15,8%</div><div class="l">Part BestCall — tentatives OK</div><div class="d">1 079 / 6 846</div></div>
+    </div>
+    <table>
+      <thead><tr><th>Pays</th><th>€ Marché</th><th>€ BestCall</th><th>% Contribution</th></tr></thead>
+      <tbody>
+        <tr><td>🇵🇹 Portugal</td><td>25 708€</td><td>8 367€</td><td><strong>32,6%</strong></td></tr>
+        <tr><td>🌎 Latino</td><td>4 643€</td><td>1 304€</td><td><strong>28,1%</strong></td></tr>
+        <tr><td>🇫🇷 France</td><td>83 358€</td><td>14 528€</td><td><strong>17,4%</strong></td></tr>
+        <tr><td>🇪🇸 Espagne</td><td>28 051€</td><td>4 350€</td><td><strong>15,5%</strong></td></tr>
+        <tr><td>🇹🇷 Turquie</td><td>12 886€</td><td>1 226€</td><td><strong>9,5%</strong></td></tr>
+        <tr><td>🇮🇹 Italie</td><td>135 487€</td><td>12 211€</td><td><strong>9,0%</strong></td></tr>
+      </tbody>
+    </table>
+    <div class="success">
+      <strong>✅ Confirmation utile :</strong> la part BestCall (14,5% en montant) reste dans le même ordre de grandeur qu'en juillet (11,9%),
+      contrairement au grand écart observé entre juin et juillet. Cela confirme que le changement de périmètre vu en juillet
+      correspond probablement à une vraie évolution du marché total, pas à une erreur ponctuelle d'export — même si une clarification
+      formelle avec Wengo reste utile.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📊 Tendance — Montant recouvré BestCall (15 mois)</h2>
+    <table>
+      <thead><tr><th>Mois</th><th>Tentatives</th><th>€ Recouvrés</th><th>€/tentative</th><th></th></tr></thead>
+      <tbody>
+        <tr><td>Juin 2025</td><td>2 690</td><td>25 738€</td><td>9,57€</td><td><div class="bar-wrap"><div class="bar" style="width:41%"></div></div></td></tr>
+        <tr><td>Juil. 2025</td><td>3 748</td><td>37 270€</td><td>9,94€</td><td><div class="bar-wrap"><div class="bar" style="width:59%"></div></div></td></tr>
+        <tr><td>Août 2025</td><td>3 701</td><td>33 362€</td><td>9,01€</td><td><div class="bar-wrap"><div class="bar" style="width:53%"></div></div></td></tr>
+        <tr><td>Sept. 2025</td><td>3 060</td><td>32 963€</td><td>10,77€</td><td><div class="bar-wrap"><div class="bar" style="width:52%"></div></div></td></tr>
+        <tr><td>Oct. 2025</td><td>2 045</td><td>41 900€</td><td>20,49€</td><td><div class="bar-wrap"><div class="bar bar-g" style="width:67%"></div></div></td></tr>
+        <tr><td>Nov. 2025</td><td>1 737</td><td>44 118€</td><td>25,40€</td><td><div class="bar-wrap"><div class="bar bar-g" style="width:70%"></div></div></td></tr>
+        <tr><td>Déc. 2025</td><td>1 266</td><td>36 811€</td><td>29,08€</td><td><div class="bar-wrap"><div class="bar" style="width:59%"></div></div></td></tr>
+        <tr><td>Janv. 2026</td><td>2 389</td><td>39 301€</td><td>16,45€</td><td><div class="bar-wrap"><div class="bar" style="width:62%"></div></div></td></tr>
+        <tr><td>Févr. 2026</td><td>2 434</td><td>36 006€</td><td>14,79€</td><td><div class="bar-wrap"><div class="bar" style="width:57%"></div></div></td></tr>
+        <tr><td>Mars 2026</td><td>2 003</td><td>34 339€</td><td>17,14€</td><td><div class="bar-wrap"><div class="bar" style="width:55%"></div></div></td></tr>
+        <tr><td>Avr. 2026</td><td>1 524</td><td>33 773€</td><td>22,16€</td><td><div class="bar-wrap"><div class="bar" style="width:54%"></div></div></td></tr>
+        <tr><td>Mai 2026</td><td>1 396</td><td>30 952€</td><td>22,17€</td><td><div class="bar-wrap"><div class="bar" style="width:49%"></div></div></td></tr>
+        <tr><td>Juin 2026</td><td>1 220</td><td>28 743€</td><td>23,56€</td><td><div class="bar-wrap"><div class="bar" style="width:46%"></div></div></td></tr>
+        <tr><td>Juillet 2026</td><td>1 217</td><td>33 834€</td><td>27,80€</td><td><div class="bar-wrap"><div class="bar" style="width:54%"></div></div></td></tr>
+        <tr class="total"><td>Août 2026</td><td>1 542</td><td>41 986€</td><td>27,23€</td><td><div class="bar-wrap"><div class="bar bar-g" style="width:67%"></div></div></td></tr>
+      </tbody>
+    </table>
+    <div class="success"><strong>✅ 2ᵉ meilleur mois du suivi (15 mois), juste derrière novembre 2025 :</strong> 41 986€ recouvrés, 3ᵉ mois de hausse consécutif. Le montant par tentative reste élevé (27,23€) tout en absorbant une nette hausse de volume (+26,7% de tentatives) — signe que la qualité de ciblage ne se dégrade pas avec le volume.</div>
+  </div>
+</section>
+
+<!-- ========== TAUX D'OCCUPATION ========== -->
+<section id="occupation" class="tab">
+  <div class="card">
+    <h2>🎧 Taux d'occupation — Le travail qui ne se voit pas dans les chiffres d'appels</h2>
+    <div class="kpi-row">
+      <div class="kpi"><div class="v">2 423h</div><div class="l">Heures de facturation</div></div>
+      <div class="kpi"><div class="v">2 552,7h</div><div class="l">Heures de connexion (17 conseillères)</div></div>
+      <div class="kpi"><div class="v">58,6%</div><div class="l">% Disponible</div></div>
+      <div class="kpi"><div class="v">26,0%</div><div class="l">% en appel</div></div>
+      <div class="kpi"><div class="v">84,6%</div><div class="l">% Productif</div></div>
+    </div>
+    <div class="note">Aucune anomalie de données ce mois-ci (contrairement à juillet) — toutes les conseillères, y compris "Best Sup", intégrées au calcul.</div>
+  </div>
+
+  <div class="card">
+    <h2>🚨 SOS — 14 signalements en août (vs 25 en juillet)</h2>
+    <div class="kpi-row">
+      <div class="kpi"><div class="v">7</div><div class="l">Téléphonie / lignes bloquées</div></div>
+      <div class="kpi"><div class="v">4</div><div class="l">Chat / mise en attente</div></div>
+      <div class="kpi"><div class="v">3</div><div class="l">Incidents techniques divers</div></div>
+    </div>
+    <table>
+      <thead><tr><th>Catégorie</th><th>Personnes concernées</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Téléphonie (7)</strong></td><td>Silvia Garcia Orenes (3) · Federica Ciaccia / Aradia (3) · Enrica Massara (1)</td></tr>
+        <tr><td><strong>Chat (4)</strong></td><td>Cristina Calvitti (2) · Nathan (1) · Margot Bellan (1)</td></tr>
+        <tr><td><strong>Technique divers (3)</strong></td><td>Tati Tania / Ada (1) · Evidence Laeta / Agathe de Vrye (1) · Om Hanna (1)</td></tr>
+      </tbody>
+    </table>
+    <div class="success"><strong>✅ Bon signal :</strong> sur les 14 signalements de ce mois, aucun ne correspond à une urgence vitale (contrairement à juillet où ~6 signalements sur 25 relevaient d'alertes suicide) — la totalité concerne des incidents techniques (téléphonie, chat, connexion). Plus de 50% des cas concernent la téléphonie, cohérent avec le thème "Mise en relation échouée" identifié comme 1ère friction du mois côté tickets.</div>
+    <div class="alert">📌 <strong>Point de méthode à poursuivre :</strong> comme demandé en Copil, il reste à distinguer nombre de <em>personnes</em> distinctes vs nombre d'<em>e-mails/signalements</em> — ici Silvia (3 e-mails) et Federica (3 e-mails) représentent à elles deux 6 des 7 signalements téléphonie, donc 2 personnes, pas 6 cas indépendants.</div>
+  </div>
+
+  <div class="card">
+    <h2>💫 Experts Rédac — Consultations par écrit, par marché</h2>
+    <table>
+      <thead><tr><th>Marché</th><th>Conseillères</th><th>Transactions</th><th>%Δ</th><th>VA</th><th>%Δ</th><th>QOS</th><th>Acheteurs</th></tr></thead>
+      <tbody>
+        <tr><td>🇫🇷 France</td><td>7</td><td>60</td><td class="up">+33,3%</td><td>779</td><td class="up">+27,4%</td><td>100%</td><td>59</td></tr>
+        <tr><td>🇮🇹 Italie</td><td>5</td><td>58</td><td class="up">+3,6%</td><td>760</td><td class="up">+8,2%</td><td>100%</td><td>57</td></tr>
+        <tr><td>🇪🇸 Espagne</td><td>5</td><td>53</td><td class="dn">-13,1%</td><td>597</td><td class="up">+2,4%</td><td>98%</td><td>52</td></tr>
+        <tr><td>🇵🇹 Portugal</td><td>5</td><td>42</td><td class="up">+10,5%</td><td>356</td><td class="up">+11,9%</td><td>100%</td><td>40</td></tr>
+        <tr class="dim"><td>🇩🇪 Allemagne</td><td>4</td><td>30</td><td class="up">+200,0%</td><td>306</td><td class="up">+595,5%</td><td>100%</td><td>28</td></tr>
+        <tr class="dim"><td>🇺🇸 USA</td><td>6</td><td>23</td><td class="up">+155,6%</td><td>167</td><td class="up">+111,4%</td><td>100%</td><td>23</td></tr>
+        <tr class="dim"><td>🌎 Latino</td><td>4</td><td>4</td><td class="dn">-20,0%</td><td>52</td><td class="up">+10,6%</td><td>100%</td><td>4</td></tr>
+        <tr class="dim"><td>🇹🇷 Turquie</td><td>3</td><td>1</td><td>0,0%</td><td>9</td><td class="up">+800,0%</td><td>100%</td><td>1</td></tr>
+        <tr class="total"><td>TOTAL</td><td>27</td><td>271</td><td class="up">+20,4%</td><td>3 025</td><td class="up">+26,8%</td><td>100%</td><td>264</td></tr>
+      </tbody>
+    </table>
+    <div class="success"><strong>✅ Croissance forte tous marchés confondus :</strong> VA totale +26,8%, portée notamment par l'Allemagne (+595,5%, petit volume) et les USA (+111,4%).</div>
+  </div>
+
+  <div class="card">
+    <h2>✍️ Stats des commentaires (modération d'avis), par langue</h2>
+    <table>
+      <thead><tr><th>Langue</th><th>Supprimés</th><th>Reçus &amp; publiés</th><th>Répondus</th><th>% Répondus</th><th>% &lt;24h</th><th>% &lt;72h</th></tr></thead>
+      <tbody>
+        <tr><td>IT</td><td>1</td><td>14</td><td>14</td><td>100%</td><td>78,6%</td><td>100,0%</td></tr>
+        <tr><td>DE</td><td>4</td><td>11</td><td>11</td><td>100%</td><td>9,1%</td><td>45,5%</td></tr>
+        <tr><td>FR</td><td>8</td><td>11</td><td>11</td><td>100%</td><td>72,7%</td><td>100,0%</td></tr>
+        <tr><td>TR</td><td>0</td><td>5</td><td>3</td><td>60%</td><td>33,3%</td><td>100,0%</td></tr>
+        <tr><td>EN</td><td>0</td><td>2</td><td>2</td><td>100%</td><td>50,0%</td><td>100,0%</td></tr>
+        <tr><td>PT</td><td>1</td><td>1</td><td>1</td><td>100%</td><td>0,0%</td><td>100,0%</td></tr>
+        <tr class="dim"><td>ES</td><td>3</td><td>0</td><td>0</td><td>0%</td><td>—</td><td>—</td></tr>
+        <tr class="total"><td>TOTAL</td><td>17</td><td>44</td><td>42</td><td>95,5%</td><td>52,4%</td><td>85,7%</td></tr>
+      </tbody>
+    </table>
+    <div class="success"><strong>✅ Réactivité maintenue :</strong> 85,7% des réponses en moins de 72h, taux de réponse global de 95,5%.</div>
+    <div class="alert">⚠ Allemagne : seulement 9,1% des réponses en moins de 24h — délai à surveiller sur ce marché.</div>
+  </div>
+
+  <div class="card">
+    <h2>🤓 Relecture d'articles</h2>
+    <div class="kpi-row">
+      <div class="kpi"><div class="v">32</div><div class="l">Articles relus en août</div></div>
+    </div>
+    <p style="font-size:12px;line-height:1.7">Chaque conseillère relit, dans sa langue, les articles publiés sur Astro Center selon le planning éditorial fourni par Wengo.</p>
+    <div class="note">Détail : <a href="https://docs.google.com/spreadsheets/d/1VoOQXpjTXN06rr4Wy4tu7TXOI_UWducq4aACj-iYxRQ/edit?usp=sharing" target="_blank" rel="noopener">planning éditorial partagé</a>.</div>
+  </div>
+
+  <div class="card">
+    <h2>🎯 Demandes à formaliser avec Wengo</h2>
+    <ol style="margin-left:18px;font-size:12px;line-height:1.9">
+      <li>Continuer le travail sur le comptage SOS par personne distincte plutôt que par e-mail (2 personnes ont généré 6 des 7 signalements téléphonie ce mois-ci).</li>
+      <li>Conformité de traitement des tickets escaladés N2 — toujours en attente depuis juillet.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ========== ATTENDU DE WENGO ========== -->
+<section id="attendu" class="tab">
+  <div class="card">
+    <h2>🚀 Attendu de Wengo — Suivi des directives</h2>
+    <div class="comment">
+      Ce rapport applique la même structure que juillet (déjà validée) et poursuit les chantiers ouverts lors des Copils précédents.
+    </div>
+    <div class="note">Sources : <a href="https://docs.google.com/document/d/1oBA44VfTdukNhhvWoiRLUZfibR6MB3MMNVynhjcGLP0/edit?tab=t.bjmsrosggyl5" target="_blank" rel="noopener">Notes Copil du 10/06</a> · <a href="https://docs.google.com/document/d/1XAtedUStP-QheUOYP95U8yJUWrjjxDpNdv5dGt5INkY/edit?tab=t.4w7o2ggtc6n5" target="_blank" rel="noopener">Notes Copil du 09/07</a></div>
+  </div>
+
+  <div class="card">
+    <h2>✅ Suivi des chantiers ouverts en juillet</h2>
+    <table>
+      <thead><tr><th>Chantier ouvert en juillet</th><th>Statut en août</th></tr></thead>
+      <tbody>
+        <tr><td>Comparaison Recouvrement BestCall vs marché global</td><td><span class="badge badge-g">✅ Reconduit</span> — confirme l'ordre de grandeur de juillet (~12-15%), rassurant sur la fiabilité de la donnée</td></tr>
+        <tr><td>Distinguer même expert qui rappelle vs experts différents</td><td><span class="badge badge-g">✅ Reconduit et étendu</span> — analyse qualitative couvre 4 marchés ce mois-ci (vs France seule en juillet)</td></tr>
+        <tr><td>Analyse SOS détaillée avec catégorisation</td><td><span class="badge badge-g">✅ Fait</span> — 14 signalements catégorisés, aucune urgence vitale identifiée ce mois-ci</td></tr>
+        <tr><td>Conformité de traitement des tickets escaladés</td><td><span class="badge badge-y">⏳ Toujours en attente de données</span></td></tr>
+        <tr><td>Nombre exact d'articles relus</td><td><span class="badge badge-g">✅ Confirmé (32 en août)</span></td></tr>
+        <tr><td>Total mensuel des Heures de Facturation</td><td><span class="badge badge-g">✅ Confirmé (2 423h)</span></td></tr>
+        <tr><td>Interface de suivi Rédac (avis répondus, messages envoyés)</td><td><span class="badge badge-b">🔜 Statut à vérifier auprès de Wengo</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ========== DISCUSSION ========== -->
+<section id="discussion" class="tab">
+  <div class="card">
+    <h2>💬 Guide de discussion — Copil Août 2026</h2>
+    <div class="comment">Ce guide sert à piloter la réunion : il ne reprend pas le détail chiffré (déjà dans les autres onglets), seulement les questions à poser, les décisions à obtenir et les sujets à cadrer avec Wengo.</div>
+  </div>
+
+  <div class="card">
+    <h2>🕐 Format de séance proposé (~60 min)</h2>
+    <div class="kpi-row">
+      <div class="kpi"><div class="v">10 min</div><div class="l">Tour d'horizon</div><div class="d">Bilan du mois, Recouvrement en forte hausse</div></div>
+      <div class="kpi"><div class="v">25 min</div><div class="l">Zoom Expert</div><div class="d">Entrant : P0 protection + coupures 30min · Sortant : campagne TOP Experts</div></div>
+      <div class="kpi"><div class="v">10 min</div><div class="l">Points ouverts</div><div class="d">Recouvrement entrant, conformité tickets</div></div>
+      <div class="kpi"><div class="v">15 min</div><div class="l">Décisions &amp; arbitrages</div><div class="d">Plans d'action Expert entrant + sortant</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>1️⃣ Questions clés à poser en séance</h2>
+    <table>
+      <thead><tr><th>#</th><th>Sujet</th><th>Question à poser à Wengo</th><th>Priorité</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Protection des experts (P0)</td><td>Peut-on lancer immédiatement le relais hors horaires et le circuit de protection accéléré recommandés dans l'analyse ?</td><td><span class="badge badge-r">Critique</span></td></tr>
+        <tr><td>2</td><td>Coupures ~30 minutes</td><td>Un ticket technique transversal peut-il être ouvert pour rapprocher les cas Portugal/Italie, avec horaires précis et type de forfait ?</td><td><span class="badge badge-r">Critique</span></td></tr>
+        <tr><td>3</td><td>Campagne TOP Experts</td><td>Peut-on prioriser le rappel des 26 experts non joints (21 France, 5 Italie) et le traitement des litiges financiers France ?</td><td><span class="badge badge-r">Critique</span></td></tr>
+        <tr><td>4</td><td>Profils à alerte (Agathe de Vrye, Camilla Gioia)</td><td>Un suivi individuel dédié peut-il être lancé pour ces deux dossiers de risque de départ ?</td><td><span class="badge badge-r">Critique</span></td></tr>
+        <tr><td>5</td><td>Dossier Amaranto / Léo</td><td>Un interlocuteur responsable peut-il reprendre ces suivis avec un diagnostic chiffré ?</td><td><span class="badge badge-y">Élevé</span></td></tr>
+        <tr><td>6</td><td>Recouvrement entrant</td><td>Pourquoi cette donnée est-elle absente ce mois-ci ? Peut-elle être récupérée rétroactivement ?</td><td><span class="badge badge-y">Élevé</span></td></tr>
+        <tr><td>7</td><td>Conformité tickets</td><td>Où en est la mise à disposition de la donnée de conformité de traitement, demandée depuis juillet ?</td><td><span class="badge badge-y">Élevé</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>2️⃣ Décisions à valider avec Wengo</h2>
+    <ul style="margin-left:18px;font-size:12px;line-height:1.9">
+      <li>Lancer le circuit de protection "Sécurité expert" (P0) — priorité absolue de ce mois côté entrant.</li>
+      <li>Ouvrir un dossier incident transversal sur les coupures ~30 minutes (Portugal/Italie).</li>
+      <li>Relancer les 26 experts non joints de la campagne TOP Experts, en priorité les 9 contactés par mail sans réponse côté France.</li>
+      <li>Lancer un suivi individuel pour Agathe de Vrye et Camilla Gioia (risque de départ avéré).</li>
+      <li>Reprendre Amaranto et Cristal avec un interlocuteur responsable du suivi.</li>
+      <li>Réclamer la donnée Recouvrement entrant manquante.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>3️⃣ À garder sous le coude si le client questionne les chiffres</h2>
+    <ul style="margin-left:18px;font-size:12px;line-height:1.9">
+      <li>Le Recouvrement entrant n'est pas "tombé à zéro" — la donnée est absente de l'export, pas nulle. Ne pas laisser penser à un arrêt d'activité (mentionné une seule fois, dans l'onglet Recouvrement).</li>
+      <li>La part de contribution BestCall au marché (14,5%) est cohérente avec juillet — le grand écart de juin n'était donc probablement pas une erreur isolée.</li>
+      <li>L'analyse qualitative Expert entrant ne couvre pas la Turquie ce mois-ci (aucun appel trouvé) — cela ne veut pas dire qu'il n'y a pas de problème là-bas.</li>
+      <li>La campagne TOP Experts sortante n'a joint que 57,1% des experts France (83,3% en Italie) — le taux de couverture doit être présenté honnêtement, pas arrondi à la hausse.</li>
+      <li>Les "Service Expert Top/Center/Flop" ne sont pas un classement de chiffre d'affaires vérifié — c'est une file de routage.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>4️⃣ Données à obtenir pour septembre</h2>
+    <table>
+      <thead><tr><th>Donnée demandée</th><th>Pourquoi</th><th>À qui la demander</th></tr></thead>
+      <tbody>
+        <tr><td>Recouvrement entrant du mois d'août</td><td>Donnée manquante à réclamer avant qu'elle ne soit définitivement perdue</td><td>Data Studio / Nicolas</td></tr>
+        <tr><td>Conformité de traitement par ticket escaladé N2</td><td>Toujours en attente depuis juillet</td><td>Équipe Foxi / Marta</td></tr>
+        <tr><td>Suivi des 26 experts non joints de la campagne TOP Experts</td><td>Compléter la couverture avant le prochain bilan</td><td>Aurore / Gabriela</td></tr>
+        <tr><td>Résultat des relances Agathe de Vrye et Camilla Gioia</td><td>Risque de départ à traiter en priorité</td><td>Équipe Expert</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<script>
+(function(){
+const STORAGE_KEY = "copil-2026-08:tab";
+const tabs = document.querySelectorAll("nav button[data-t]");
+const sections = document.querySelectorAll("section.tab");
+
+function activate(id){
+  tabs.forEach(t => t.classList.toggle("active", t.dataset.t === id));
+  sections.forEach(s => s.classList.toggle("active", s.id === id));
+  try { localStorage.setItem(STORAGE_KEY, id); } catch(e){}
+}
+
+tabs.forEach(t => t.addEventListener("click", () => activate(t.dataset.t)));
+
+let initial = "copil";
+try {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved && document.getElementById(saved)) initial = saved;
+} catch(e){}
+activate(initial);
+})();
+</script>
+
+</body>
+</html>
