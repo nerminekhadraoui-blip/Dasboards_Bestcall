@@ -12,7 +12,8 @@
         { "id": "2026-06-mi",    "label": "Mi juin 2026",           "file": "./dashboards/client/2026-06-mi.html" },
         { "id": "2026-06",    "label": "Juin 2026",           "file": "./dashboards/client/2026-06.html" },
         { "id": "2026-07",    "label": "Juillet 2026",           "file": "./dashboards/client/2026-07.html" },
-        { "id": "2026-08",    "label": "Août 2026",           "file": "./dashboards/client/2026-08.html" }
+        { "id": "2026-08",    "label": "Août 2026",           "file": "./dashboards/client/2026-08.html" },
+        { "id": "2026-09",    "label": "Septembre 2026",      "file": "./dashboards/client/2026-09.html" }
       ]
     },
     "expert": {
